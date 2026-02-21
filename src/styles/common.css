@@ -1,0 +1,147 @@
+/* Common Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Common Scrollbar Styles */
+.messages-container::-webkit-scrollbar,
+.chats-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chats-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-thumb,
+.chats-list::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
+
+.chats-list::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+}
+
+/* Common Transitions */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+button {
+  transition: all 0.2s ease;
+}
+
+input {
+  transition: all 0.2s ease;
+}
+
+/* Common Typography */
+body {
+  font-family: 'Times New Roman', 'Georgia', serif;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}
+
+.chatbot-header h1,
+.sidebar-header h2,
+.modal-content h2,
+.modal-content p,
+.message-input,
+.send-button,
+.user-type-button {
+  font-family: 'Times New Roman', serif;
+}
+
+.chatbot-header h1,
+.sidebar-header h2,
+.modal-content h2,
+.send-button,
+.user-type-button,
+.new-chat-button {
+  letter-spacing: 1px;
+}
+
+.user-type-badge,
+.new-chat-button,
+.send-button,
+.user-type-button {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.send-button {
+  letter-spacing: 1px;
+}
+
+/* Common Button Styles */
+button:active {
+  transform: scale(0.98);
+}
+
+.send-button:active:not(:disabled),
+.new-chat-button:active,
+.user-type-button:active {
+  transform: scale(0.98);
+}
+
+/* Common Border Styles */
+.border-radius-none {
+  border-radius: 0;
+}
+
+/* Common Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.fade-in-message {
+  animation: fadeInMessage 0.3s ease-in;
+}

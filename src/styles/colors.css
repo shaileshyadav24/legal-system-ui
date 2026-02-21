@@ -1,0 +1,254 @@
+/* Color Variables */
+:root {
+  --color-black: #000;
+  --color-white: #fff;
+  --color-gray-dark: #333;
+  --color-gray-medium: #666;
+  --color-gray-light: #888;
+  --color-gray-lighter: #f5f5f5;
+  --color-gray-darkest: #111;
+  --color-gray-darker: #1a1a1a;
+  --color-gray-border: #222;
+  --color-gray-border-light: #555;
+  --color-gray-border-medium: #444;
+}
+
+/* Background Colors */
+body {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.app {
+  background: var(--color-white);
+}
+
+.chat-panel {
+  background: var(--color-white);
+}
+
+.chatbot-container {
+  background: var(--color-white);
+}
+
+.chatbot-header {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-bottom-color: var(--color-black);
+}
+
+.messages-container {
+  background: var(--color-white);
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: var(--color-white);
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: var(--color-black);
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-dark);
+}
+
+.chat-sidebar {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-right-color: var(--color-gray-dark);
+}
+
+.sidebar-header {
+  border-bottom-color: var(--color-gray-dark);
+}
+
+.sidebar-header h2 {
+  color: var(--color-white);
+}
+
+.user-type-badge {
+  background: var(--color-gray-dark);
+  border-color: var(--color-gray-border-light);
+}
+
+.chats-list::-webkit-scrollbar-track {
+  background: var(--color-black);
+}
+
+.chats-list::-webkit-scrollbar-thumb {
+  background: var(--color-gray-dark);
+}
+
+.chats-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-border-light);
+}
+
+.empty-chats {
+  color: var(--color-gray-medium);
+}
+
+.empty-hint {
+  color: var(--color-gray-border-medium);
+}
+
+.chat-item {
+  background: var(--color-gray-darkest);
+  border-color: var(--color-gray-border);
+}
+
+.chat-item:hover {
+  background: var(--color-gray-darker);
+  border-color: var(--color-gray-dark);
+}
+
+.chat-item.active {
+  background: var(--color-white);
+  color: var(--color-black);
+  border-left-color: var(--color-black);
+}
+
+.chat-item.active .chat-item-title {
+  color: var(--color-black);
+}
+
+.chat-item.active .chat-item-preview-text {
+  color: var(--color-gray-dark);
+}
+
+.chat-item.active .chat-item-time {
+  color: var(--color-gray-medium);
+}
+
+.chat-item-title {
+  color: var(--color-white);
+}
+
+.chat-item-preview-text {
+  color: var(--color-gray-light);
+}
+
+.chat-item-time {
+  color: var(--color-gray-medium);
+}
+
+.no-chat-selected {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.no-chat-selected h2 {
+  color: var(--color-gray-medium);
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background: var(--color-white);
+  border-color: var(--color-black);
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 4px var(--color-black);
+}
+
+.modal-content h2 {
+  color: var(--color-black);
+}
+
+.modal-content p {
+  color: var(--color-black);
+}
+
+/* Message Colors */
+.user-message .message-content {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.bot-message .message-content {
+  background: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.message-content.loading {
+  background: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.loading-dots span {
+  background: var(--color-black);
+}
+
+/* Input Colors */
+.message-input {
+  background: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.message-input:focus {
+  background: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.message-input:disabled {
+  background: var(--color-gray-lighter);
+  border-color: var(--color-gray-medium);
+}
+
+.input-container {
+  background: var(--color-white);
+  border-top-color: var(--color-black);
+}
+
+/* Button Colors */
+.send-button {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.send-button:hover:not(:disabled) {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.send-button:disabled {
+  background: var(--color-gray-medium);
+  border-color: var(--color-gray-medium);
+}
+
+.new-chat-button {
+  background: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.new-chat-button:hover {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+.user-type-button.lawyer {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.user-type-button.lawyer:hover {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.user-type-button.layman {
+  background: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.user-type-button.layman:hover {
+  background: var(--color-black);
+  color: var(--color-white);
+}
