@@ -1,6 +1,6 @@
-import './ChatSidebar.css'
+import './ChatSidebar.scss'
 
-function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, onUserTypeChange }) {
+function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, onUserTypeChange, onDeleteChat }) {
   return (
     <div className="chat-sidebar">
       <div className="sidebar-header">
@@ -25,10 +25,10 @@ function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, o
             >
               <div className="chat-item-preview">
                 <div className="chat-item-title">
-                  {chat.title || 'New Chat'}
-                </div>
-                <div className="chat-item-preview-text">
-                  {chat.lastMessage || ''}
+                  <label>{chat.title || 'New Chat'}</label>
+                  <button className="delete-icon" onClick={(e) => { e.stopPropagation(); onDeleteChat(chat.id) }}>
+                    ✕
+                  </button>
                 </div>
               </div>
               <div className="chat-item-time">

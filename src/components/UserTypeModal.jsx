@@ -1,4 +1,4 @@
-import './UserTypeModal.css'
+import './UserTypeModal.scss'
 
 function UserTypeModal({ onSelect }) {
   return (

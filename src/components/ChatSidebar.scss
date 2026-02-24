@@ -17,13 +17,13 @@
   align-items: center;
   background: var(--color-black);
   color: var(--color-white);
-}
 
-.sidebar-header h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
-  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+  }
 }
 
 .user-type-badge {
@@ -55,11 +55,11 @@
 .empty-chats {
   padding: 2rem 1rem;
   text-align: center;
-}
 
-.empty-chats p {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
+  p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
 }
 
 .empty-hint {
@@ -85,6 +85,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
   label {
     width: 90%;
   }
@@ -102,6 +103,23 @@
   text-align: right;
 }
 
+.delete-icon {
+  background: transparent;
+  border: none;
+  color: var(--color-gray-medium);
+  font-size: 0.8rem;
+  cursor: pointer;
+  float: right;
+
+  &:hover {
+    color: var(--color-red);
+  }
+
+  &:active {
+    color: var(--color-gray-border);
+  }
+}
+
 @media (max-width: 768px) {
   .chat-sidebar {
     width: 100%;
@@ -113,26 +131,9 @@
 
   .sidebar-header {
     padding: 1rem;
+
+    h2 {
+      font-size: 1rem;
+    }
   }
-
-  .sidebar-header h2 {
-    font-size: 1rem;
-  }
-}
-
-.delete-icon {
-  background: transparent;
-  border: none;
-  color: var(--color-gray-medium);
-  font-size: 0.8rem;
-  cursor: pointer;
-  float: right;
-}
-
-.delete-icon:hover {
-  color: var(--color-red);
-}
-
-.delete-icon:active {
-  color: var(--color-gray-border);
 }

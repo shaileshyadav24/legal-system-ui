@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { sendQuery } from '../services/api'
-import './Chatbot.css'
+import './Chatbot.scss'
 
 function Chatbot({ userType, chatId, chat, onUpdateChat }) {
   const [messages, setMessages] = useState([

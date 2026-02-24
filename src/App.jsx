@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import UserTypeModal from './components/UserTypeModal'
 import Chatbot from './components/Chatbot'
 import ChatSidebar from './components/ChatSidebar'
-import './App.css'
+import './App.scss'
 
 function App() {
   const [userType, setUserType] = useState(null)
@@ -17,13 +17,20 @@ function App() {
       setUserType(storedUserType)
       setShowModal(false)
     }
-    // Load chats from localStorage
+  }, [])
+
+  useEffect(() => {
+    // Load chats from localStorage only once on mount
     const storedChats = localStorage.getItem('chats')
     if (storedChats) {
-      const parsedChats = JSON.parse(storedChats)
-      setChats(parsedChats)
-      if (parsedChats.length > 0) {
-        setActiveChatId(parsedChats[0].id)
+      try {
+        const parsedChats = JSON.parse(storedChats)
+        setChats(parsedChats)
+        if (parsedChats.length > 0) {
+          setActiveChatId(parsedChats[0].id)
+        }
+      } catch (error) {
+        console.error('Failed to parse chats from localStorage:', error)
       }
     }
   }, [])
@@ -66,6 +73,17 @@ function App() {
     setShowModal(true)
   }
 
+  const deleteChat = (chatId) => {
+    const updatedChats = chats.filter(chat => chat.id !== chatId)
+    setChats(updatedChats)
+    localStorage.setItem('chats', JSON.stringify(updatedChats))
+    if (activeChatId === chatId) {
+      setActiveChatId(updatedChats.length > 0 ? updatedChats[0].id : null)
+    }
+  }
+
+  const activeChat = chats.find(chat => chat.id === activeChatId)
+
   return (
     <div className="app">
       {showModal && (
@@ -73,20 +91,21 @@ function App() {
       )}
       {!showModal && userType && (
         <div className="app-layout">
-          <ChatSidebar 
+          <ChatSidebar
             chats={chats}
             activeChatId={activeChatId}
             onSelectChat={handleSelectChat}
             onNewChat={handleNewChat}
             onUserTypeChange={changeUserType}
             userType={userType}
+            onDeleteChat={deleteChat}
           />
           <div className="chat-panel">
             {activeChatId ? (
-              <Chatbot 
+              <Chatbot
                 userType={userType}
                 chatId={activeChatId}
-                chat={chats.find(c => c.id === activeChatId)}
+                chat={activeChat}
                 onUpdateChat={handleUpdateChat}
               />
             ) : (
