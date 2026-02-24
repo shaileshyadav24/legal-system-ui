@@ -1,11 +1,11 @@
 import './ChatSidebar.css'
 
-function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType }) {
+function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, onUserTypeChange }) {
   return (
     <div className="chat-sidebar">
       <div className="sidebar-header">
         <h2>Legal System</h2>
-        <span className="user-type-badge">{userType}</span>
+        <button onClick={onUserTypeChange} className="user-type-badge">{userType}</button>
       </div>
       <button className="new-chat-button" onClick={onNewChat}>
         + New Chat

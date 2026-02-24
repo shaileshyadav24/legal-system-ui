@@ -16,14 +16,26 @@ function Chatbot({ userType, chatId, chat, onUpdateChat }) {
   // Reset messages when chatId changes
   useEffect(() => {
     if (chat && chat.messages && chat.messages.length > 0) {
-      setMessages(chat.messages)
+      // Only update if messages are different
+      const isDifferent =
+        chat.messages.length !== messages.length ||
+        chat.messages.some((m, i) => m.text !== messages[i]?.text || m.sender !== messages[i]?.sender)
+      if (isDifferent) {
+        setMessages(chat.messages)
+      }
     } else {
-      setMessages([
-        {
-          text: `Hello! You are logged in as a ${userType}. How can I help you today?`,
-          sender: 'bot'
-        }
-      ])
+      if (
+        messages.length !== 1 ||
+        messages[0].sender !== 'bot' ||
+        messages[0].text !== `Hello! You are logged in as a ${userType}. How can I help you today?`
+      ) {
+        setMessages([
+          {
+            text: `Hello! You are logged in as a ${userType}. How can I help you today?`,
+            sender: 'bot'
+          }
+        ])
+      }
     }
   }, [chatId, userType, chat])
 
@@ -63,13 +75,19 @@ function Chatbot({ userType, chatId, chat, onUpdateChat }) {
     setInputValue('')
     setIsLoading(true)
 
+    const history = messages.filter((m, index) => (m.sender === 'user' || m.sender === 'bot') && index > 0).map(m => ({
+      q: m.text,
+      sender: m.sender
+    }))
+
     try {
-      const response = await sendQuery(inputValue, userType)
+      const response = await sendQuery(inputValue, userType, history)
       let responseText = response.answer || response.text || response.message || 'I received your message.'
       // Remove "Response:" prefix if present
       responseText = responseText.replace(/^Response:\s*/i, '').trim()
       const botMessage = {
         text: responseText,
+        urls: response.urls || [],
         sender: 'bot'
       }
       setMessages(prev => [...prev, botMessage])
@@ -104,7 +122,24 @@ function Chatbot({ userType, chatId, chat, onUpdateChat }) {
             className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
           >
             <div className="message-content">
-              {message.text}
+              {message.text.split('\n').map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+
+            {message.urls && message.urls.length > 0 && (
+              <>
+                <ol className="message-urls">
+                  <b>Related Links:</b>
+                  {message.urls.map((url, idx) => (
+                    <li key={idx}>
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="message-url">
+                       {url.length > 50 ? url.substring(0, 47) + '...' : url}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
             </div>
           </div>
         ))}

@@ -53,11 +53,17 @@ function App() {
   }
 
   const handleUpdateChat = (chatId, updates) => {
-    const updatedChats = chats.map(chat => 
-      chat.id === chatId ? { ...chat, ...updates } : chat
-    )
-    setChats(updatedChats)
-    localStorage.setItem('chats', JSON.stringify(updatedChats))
+    // const updatedChats = chats.map(chat => 
+    //   chat.id === chatId ? { ...chat, ...updates } : chat
+    // )
+    // setChats(updatedChats)
+    // localStorage.setItem('chats', JSON.stringify(updatedChats))
+  }
+
+  const changeUserType = () => {
+    localStorage.removeItem('userType')
+    setUserType(null)
+    setShowModal(true)
   }
 
   return (
@@ -72,6 +78,7 @@ function App() {
             activeChatId={activeChatId}
             onSelectChat={handleSelectChat}
             onNewChat={handleNewChat}
+            onUserTypeChange={changeUserType}
             userType={userType}
           />
           <div className="chat-panel">

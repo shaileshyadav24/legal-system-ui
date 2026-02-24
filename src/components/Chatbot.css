@@ -10,12 +10,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid;
+  border-bottom: 2px solid var(--color-black);
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .chatbot-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
 }
 
 .messages-container {
@@ -25,12 +28,17 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  background: var(--color-white);
+  color: var(--color-black);
+  border-radius: 18px;
 }
 
 .message {
   display: flex;
   margin-bottom: 0.5rem;
   animation: fadeInMessage 0.3s ease-in;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+  border-radius: 16px;
 }
 
 .user-message {
@@ -51,7 +59,7 @@
   font-size: 0.95rem;
 }
 
-.message-content.loading {
+.message-content.loading, .message-urls {
   padding: 1rem 1.5rem;
 }
 
