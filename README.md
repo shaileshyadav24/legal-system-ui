@@ -1,23 +1,48 @@
 # Legal System Chatbot - Frontend Application
 
-A modern React-based frontend application for a legal system chatbot.
+A modern React-based frontend application for a legal system chatbot with AI-powered contract review capabilities.
 
 ## Features
 
-- **User Type Selection**: Popup modal on page load asking users to select their type (Lawyer or Layman)
-- **Chatbot Interface**: Clean and modern chat UI with message history
-- **API Integration**: POST requests to `localhost:8000/query` endpoint
-- **Loading States**: Visual loading indicator while waiting for API responses
-- **Responsive Design**: Works on desktop and mobile devices
+### 🔐 Authentication System
+- **User Registration**: Create accounts with user type selection (Lawyer/Layman)
+- **Login/Logout**: Secure authentication with JWT tokens
+- **Password Recovery**: Forgot password and reset password functionality
+- **Protected Routes**: Authenticated access to chat features
+
+### 💬 Chat Interface
+- **Multi-Chat Support**: Create and manage multiple chat sessions
+- **Real-time Messaging**: Interactive chat with AI legal assistant
+- **Message History**: Persistent chat history with timestamps
+- **Related Links**: AI-generated relevant legal resources
+- **Responsive Design**: Optimized for desktop and mobile devices
+
+### 🎨 Content Management
+- **Dynamic Content**: All UI text managed through JSON configuration files
+- **Redux Integration**: Centralized state management for content and user data
+- **Internationalization Ready**: Easy content updates without code changes
+
+### 🔧 Technical Features
+- **API Integration**: RESTful API communication with backend services
+- **Loading States**: Visual feedback during API calls and content loading
+- **Error Handling**: Comprehensive error management and user feedback
+- **Local Storage**: Persistent user sessions and chat data
 
 ## Prerequisites
 
 - Node.js (v16 or higher)
 - npm or yarn
+- Backend API server running on `http://localhost:8000`
 
 ## Installation
 
-1. Install dependencies:
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd legal-system-ui
+```
+
+2. Install dependencies:
 ```bash
 npm install
 ```
@@ -29,7 +54,7 @@ npm install
 npm run dev
 ```
 
-2. The application will open in your browser at `http://localhost:3000`
+2. The application will open in your browser at `http://localhost:5173`
 
 ## Building for Production
 
@@ -41,26 +66,64 @@ The built files will be in the `dist` directory.
 
 ## API Configuration
 
-The application expects a backend API running at `http://localhost:8000/query`.
+The application communicates with a backend API. Configure the following endpoints:
 
-The API endpoint should accept POST requests with the following JSON format:
+### Authentication Endpoints
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/forgot-password` - Password reset request
+- `POST /api/auth/reset-password` - Password reset confirmation
+
+### Chat Endpoints
+- `POST /api/chat/start` - Initialize new chat session
+- `POST /api/chat/query` - Send chat message and receive AI response
+
+### Expected API Response Formats
+
+**Authentication Response:**
 ```json
 {
-  "query": "user's question",
-  "user_type": "Lawyer" or "Layman"
+  "user": {
+    "email": "user@example.com",
+    "name": "John Doe",
+    "userType": "lawyer"
+  },
+  "token": "jwt-token-here"
 }
 ```
 
-Expected response format:
+**Chat Query Response:**
 ```json
 {
-  "message": "response text"
+  "answer": "Legal analysis response...",
+  "urls": ["https://example.com/legal-resource-1", "https://example.com/legal-resource-2"]
 }
 ```
-or
+
+## Content Management
+
+The application uses a JSON-based content management system. All UI text is stored in `/public/content/` directory:
+
+- `login.json` - Login page content
+- `register.json` - Registration page content
+- `forgot-password.json` - Password recovery content
+- `reset-password.json` - Password reset content
+- `chat.json` - Chat interface content
+
+### Content Structure Example
 ```json
 {
-  "text": "response text"
+  "brand": {
+    "logo": "⚖️",
+    "title": "Review contracts",
+    "subtitle": "with AI Lawyer"
+  },
+  "heading": "Login",
+  "fields": {
+    "email": "Email",
+    "password": "Password"
+  },
+  "submitButton": "Log in"
 }
 ```
 
@@ -68,18 +131,45 @@ or
 
 ```
 legal-system-ui/
+├── public/
+│   └── content/                 # JSON content files
+│       ├── login.json
+│       ├── register.json
+│       ├── forgot-password.json
+│       ├── reset-password.json
+│       └── chat.json
 ├── src/
 │   ├── components/
-│   │   ├── UserTypeModal.jsx    # User type selection popup
-│   │   ├── UserTypeModal.css
-│   │   ├── Chatbot.jsx          # Main chatbot interface
-│   │   └── Chatbot.css
-│   ├── services/
-│   │   └── api.js               # API service functions
+│   │   ├── ui/                  # Reusable UI components
+│   │   │   ├── Button.jsx
+│   │   │   ├── Input.jsx
+│   │   │   └── Card.jsx
+│   │   ├── AuthGuard.jsx        # Route protection
+│   │   ├── ChatSidebar.jsx      # Chat session sidebar
+│   │   ├── Chatbot.jsx          # Main chat interface
+│   │   └── UserTypeModal.jsx    # User type selection
+│   ├── pages/                   # Page components
+│   │   ├── LoginPage.jsx
+│   │   ├── RegisterPage.jsx
+│   │   ├── ForgotPasswordPage.jsx
+│   │   ├── ResetPasswordPage.jsx
+│   │   └── ChatPage.jsx
+│   ├── services/                # API and utility services
+│   │   ├── api.js
+│   │   ├── authService.js
+│   │   └── contentService.js
+│   ├── store/                   # Redux store
+│   │   ├── index.js
+│   │   └── slices/
+│   │       ├── userSlice.js
+│   │       ├── chatsSlice.js
+│   │       └── contentSlice.js
+│   ├── hooks/                   # Custom React hooks
+│   │   └── usePageContent.js
 │   ├── App.jsx                  # Main app component
-│   ├── App.css
+│   ├── App.scss                 # App styles
 │   ├── main.jsx                 # Entry point
-│   └── index.css                # Global styles
+│   └── index.scss               # Global styles
 ├── index.html
 ├── package.json
 ├── vite.config.js
@@ -88,12 +178,45 @@ legal-system-ui/
 
 ## Technologies Used
 
-- React 18
-- Vite (build tool)
-- CSS3 (for styling)
+- **React 18** - UI framework with hooks
+- **Redux Toolkit** - State management
+- **React Router** - Client-side routing
+- **Sass/SCSS** - Styling with CSS preprocessor
+- **Vite** - Build tool and development server
+- **ESLint** - Code linting
 
-## Notes
+## Development Notes
 
-- User type selection is stored in localStorage, so users won't be asked again on page refresh
-- The chatbot displays a loading animation while waiting for API responses
-- Messages are automatically scrolled to the bottom when new messages arrive
+### Content Updates
+- Modify JSON files in `/public/content/` to update UI text
+- Changes are reflected immediately in development mode
+- No code changes required for content updates
+
+### State Management
+- User authentication state managed in `userSlice`
+- Chat sessions managed in `chatsSlice`
+- Dynamic content managed in `contentSlice`
+
+### Authentication Flow
+1. User registers/logs in
+2. JWT token stored in localStorage
+3. AuthGuard protects chat routes
+4. User type determines AI response context
+
+### Chat Functionality
+- Multiple chat sessions supported
+- Messages persisted in localStorage
+- AI responses include legal analysis and related links
+- Real-time loading states and error handling
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
