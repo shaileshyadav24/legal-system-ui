@@ -1,260 +1,59 @@
-/* Color Variables */
-/* Professional Black & White Palette */
 :root {
-  --color-black: #23272f; /* softened to dark gray */
-  --color-white: #fafafa;
-  --color-gray-dark: #353945;
-  --color-gray-medium: #6c6f7a;
-  --color-gray-light: #bbbbbb;
-  --color-gray-lighter: #ededed;
-  --color-gray-darkest: #181a20;
-  --color-gray-darker: #23272f;
-  --color-gray-border: #d1d5db;
-  --color-gray-border-light: #e5e7eb;
-  --color-gray-border-medium: #cbd5e1;
-  --color-red: #ef4444;
+  --color-background: #f5f8ff;
+  --color-page: #ffffff;
+  --color-panel: #fdfdff;
+  --color-card: #ffffff;
+  --color-sidebar: #0f1835;
+  --color-sidebar-alt: #101b40;
+  --color-sidebar-border: rgba(99, 119, 180, 0.32);
+  --color-sidebar-fg: #eaf0ff;
+  --color-text: #152239;
+  --color-heading: #0f172a;
+  --color-muted: #5f6d90;
+  --color-muted-strong: #334155;
+  --color-border: #dbe7ff;
+  --color-border-lg: #b6c6f1;
+  --color-shadow: rgba(15, 30, 80, 0.16);
+  --color-primary: #435cf5;
+  --color-primary-hover: #3e55eb;
+  --color-secondary: #f4f8ff;
+  --color-accent: #8c98ff;
+  --color-success: #0fa478;
+  --color-danger: #e33e49;
+  --color-input-bg: #f6f9ff;
+  --color-input-border: #cae0ff;
+  --color-tempo: #d2defb;
+  --color-white: #ffffff;
+  --color-black: #0b1129;
 }
 
-/* Background Colors */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background: var(--color-white);
-  color: var(--color-black);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
 }
 
-.app {
-  background: var(--color-white);
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
 
-.chat-panel {
-  background: var(--color-white);
+a {
+  color: var(--color-primary);
+  text-decoration: none;
 }
 
-.chatbot-container {
-  background: var(--color-white);
+a:hover {
+  color: var(--color-primary-hover);
 }
 
-.chatbot-header {
-  background: var(--color-black);
-  color: var(--color-white);
-  border-bottom-color: var(--color-black);
-}
-
-.messages-container {
-  background: var(--color-white);
-
-  &::-webkit-scrollbar-track {
-    background: var(--color-white);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-black);
-
-    &:hover {
-      background: var(--color-gray-dark);
-    }
-  }
-}
-
-.chat-sidebar {
-  background: var(--color-black);
-  color: var(--color-white);
-  border-right-color: var(--color-gray-dark);
-}
-
-.sidebar-header {
-  border-bottom-color: var(--color-gray-dark);
-
-  h2 {
-    color: var(--color-white);
-  }
-}
-
-.user-type-badge {
-  background: var(--color-gray-dark);
-  border-color: var(--color-gray-border-light);
-}
-
-.chats-list {
-  &::-webkit-scrollbar-track {
-    background: var(--color-black);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-gray-dark);
-
-    &:hover {
-      background: var(--color-gray-border-light);
-    }
-  }
-}
-
-.empty-chats {
-  color: var(--color-gray-medium);
-}
-
-.empty-hint {
-  color: var(--color-gray-border-medium);
-}
-
-.chat-item {
-  background: var(--color-gray-darkest);
-  border-color: var(--color-gray-border);
-
-  &:hover {
-    background: var(--color-gray-darker);
-    border-color: var(--color-gray-dark);
-  }
-
-  &.active {
-    background: var(--color-white);
-    color: var(--color-black);
-    border-left-color: var(--color-black);
-
-    .chat-item-title {
-      color: var(--color-black);
-    }
-
-    .chat-item-preview-text {
-      color: var(--color-gray-dark);
-    }
-
-    .chat-item-time {
-      color: var(--color-gray-medium);
-    }
-  }
-}
-
-.chat-item-title {
-  color: var(--color-white);
-}
-
-.chat-item-preview-text {
-  color: var(--color-gray-light);
-}
-
-.chat-item-time {
-  color: var(--color-gray-medium);
-}
-
-.no-chat-selected {
-  background: var(--color-white);
-  color: var(--color-black);
-
-  h2 {
-    color: var(--color-gray-medium);
-  }
-}
-
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-  background: var(--color-white);
-  border-color: var(--color-black);
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 4px var(--color-black);
-
-  h2 {
-    color: var(--color-black);
-  }
-
-  p {
-    color: var(--color-black);
-  }
-}
-
-/* Message Colors */
-.user-message .message-content {
-  background: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
-}
-
-.bot-message .message-content {
-  background: var(--color-white);
-  color: var(--color-black);
-  border-color: var(--color-black);
-}
-
-.message-content.loading {
-  background: var(--color-white);
-  border-color: var(--color-black);
-}
-
-.loading-dots span {
-  background: var(--color-black);
-}
-
-/* Input Colors */
-.message-input {
-  background: var(--color-white);
-  color: var(--color-black);
-  border-color: var(--color-black);
-
-  &:focus {
-    background: var(--color-white);
-    border-color: var(--color-black);
-  }
-
-  &:disabled {
-    background: var(--color-gray-lighter);
-    border-color: var(--color-gray-medium);
-  }
-}
-
-.input-container {
-  background: var(--color-white);
-  border-top-color: var(--color-black);
-}
-
-/* Button Colors */
-.send-button {
-  background: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
-
-  &:hover:not(:disabled) {
-    background: var(--color-white);
-    color: var(--color-black);
-  }
-
-  &:disabled {
-    background: var(--color-gray-medium);
-    border-color: var(--color-gray-medium);
-  }
-}
-
-.new-chat-button {
-  background: var(--color-white);
-  color: var(--color-black);
-  border-color: var(--color-black);
-
-  &:hover {
-    background: var(--color-black);
-    color: var(--color-white);
-    border-color: var(--color-white);
-  }
-}
-
-.user-type-button {
-  &.lawyer {
-    background: var(--color-black);
-    color: var(--color-white);
-
-    &:hover {
-      background: var(--color-white);
-      color: var(--color-black);
-    }
-  }
-
-  &.layman {
-    background: var(--color-white);
-    color: var(--color-black);
-    border-color: var(--color-black);
-
-    &:hover {
-      background: var(--color-black);
-      color: var(--color-white);
-    }
-  }
+button, input, select, textarea {
+  font: inherit;
 }

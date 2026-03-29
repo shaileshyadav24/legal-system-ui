@@ -1,0 +1,33 @@
+.ui-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0.2rem 0;
+}
+
+.ui-input-label {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.ui-input {
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--color-input-border);
+  padding: 0.5rem 0.7rem;
+  background: var(--color-input-bg);
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ui-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(67, 92, 245, 0.2);
+}
+
+.ui-input:disabled {
+  background: #e0e7ff;
+  color: var(--color-muted);
+}

@@ -1,104 +1,76 @@
-import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUserType, resetUser } from './store/slices/userSlice'
-import { setChats, addChat, setActiveChat, deleteChat } from './store/slices/chatsSlice'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { loginSuccess, resetUser, logout } from './store/slices/userSlice'
+import { setChats, addChat } from './store/slices/chatsSlice'
 import './App.scss'
-import { startNewChat } from './services/api'
+import { startChatSession, loadStoredChats, persistChats } from './services/chatService'
+import { getStoredUser } from './services/authService'
+import ChatPage from './pages/ChatPage'
+import AuthGuard from './components/AuthGuard'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
-// Lazy load components
-const UserTypeModal = lazy(() => import('./components/UserTypeModal'))
-const Chatbot = lazy(() => import('./components/Chatbot'))
-const ChatSidebar = lazy(() => import('./components/ChatSidebar'))
 function App() {
   const dispatch = useDispatch()
-  const { userType, showModal } = useSelector(state => state.user)
-  const { chats, activeChatId } = useSelector(state => state.chats)
+  const navigate = useNavigate()
+  const { isAuthenticated } = useSelector(state => state.user)
+  const { chats } = useSelector(state => state.chats)
 
   useEffect(() => {
-    // Check if user type is already stored in localStorage
-    const storedUserType = localStorage.getItem('userType')
-    if (storedUserType) {
-      dispatch(setUserType(storedUserType))
+    const storedUser = getStoredUser()
+    if (storedUser) {
+      dispatch(loginSuccess({ name: storedUser.name, email: storedUser.email, userType: storedUser.userType }))
+    }
+
+    const storedChats = loadStoredChats()
+    if (storedChats.length) {
+      dispatch(setChats(storedChats))
     }
   }, [dispatch])
 
   useEffect(() => {
-    // Save chats to localStorage whenever chats change
-    localStorage.setItem('chats', JSON.stringify(chats))
+    persistChats(chats)
   }, [chats])
 
-  const handleUserTypeSelect = useCallback((type) => {
-    dispatch(setUserType(type))
-    localStorage.setItem('userType', type)
-  }, [dispatch])
-
   const handleNewChat = useCallback(async () => {
-    const newChat = {
-      id: Date.now().toString(),
-      title: 'New Chat',
-      lastMessage: '',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      messages: []
-    }
-    await startNewChat().then(data => {
-      newChat.id = data.session_id
-      dispatch(addChat({ ...newChat, userType }))
-    }).catch(error => {
+    const state = JSON.parse(localStorage.getItem('authUser') || '{}')
+    const userType = state?.userType || 'layman'
+    try {
+      const newChat = await startChatSession(userType)
+      dispatch(addChat(newChat))
+    } catch (error) {
       console.error('Failed to start new chat:', error)
-    })
-  }, [dispatch, userType])
-
-  const handleSelectChat = useCallback((chatId) => {
-    dispatch(setActiveChat(chatId))
+    }
   }, [dispatch])
 
-  const changeUserType = useCallback(() => {
-    localStorage.removeItem('userType')
-    dispatch(resetUser())
-  }, [dispatch])
-
-  const deleteChat = useCallback((chatId) => {
-    dispatch(deleteChat(chatId))
-  }, [dispatch])
-
-  const activeChat = useMemo(() => chats.find(chat => chat.id === activeChatId), [chats, activeChatId])
+  const handleSignOut = useCallback(() => {
+    dispatch(logout())
+    localStorage.removeItem('authUser')
+    navigate('/login')
+  }, [dispatch, navigate])
 
   return (
-    <div className="app">
-      {showModal && (
-        <Suspense fallback={<div className="loading">Loading...</div>}>
-          <UserTypeModal onSelect={handleUserTypeSelect} />
-        </Suspense>
-      )}
-      {!showModal && userType && (
-        <Suspense fallback={<div className="loading">Loading chat...</div>}>
-          <div className="app-layout">
-            <ChatSidebar
-              chats={chats}
-              activeChatId={activeChatId}
-              onSelectChat={handleSelectChat}
-              onNewChat={handleNewChat}
-              onUserTypeChange={changeUserType}
-              userType={userType}
-              onDeleteChat={deleteChat}
-            />
-            <div className="chat-panel">
-              {activeChatId ? (
-                <Chatbot
-                  userType={userType}
-                  chatId={activeChatId}
-                  chat={activeChat}
-                />
-              ) : (
-                <div className="no-chat-selected">
-                  <h2>Select a chat or start a new one</h2>
-                </div>
-              )}
-            </div>
-          </div>
-        </Suspense>
-      )}
-    </div>
+      <Routes>
+        <Route path="/" element={<Navigate to={isAuthenticated ? '/chat' : '/login'} replace />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+        <Route
+          path="/chat"
+          element={
+            <AuthGuard>
+              <ChatPage onNewChat={handleNewChat} onUserTypeChange={() => dispatch(resetUser())} onSignOut={handleSignOut} />
+            </AuthGuard>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
   )
 }
 

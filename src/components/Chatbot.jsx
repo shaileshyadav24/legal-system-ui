@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { addMessage } from '../store/slices/chatsSlice'
 import { sendQuery } from '../services/api'
+import Button from './ui/Button'
+import Input from './ui/Input'
 import './Chatbot.scss'
 
 function Chatbot({ userType, chatId, chat }) {
@@ -116,22 +118,22 @@ function Chatbot({ userType, chatId, chat }) {
         <div ref={messagesEndRef} />
       </div>
       <div className="input-container">
-        <input
+        <Input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type your message..."
           disabled={isLoading}
-          className="message-input"
         />
-        <button
+        <Button
           onClick={handleSend}
           disabled={isLoading || !inputValue.trim()}
-          className="send-button"
+          variant="primary"
+          size="md"
         >
           Send
-        </button>
+        </Button>
       </div>
     </div>
   )
