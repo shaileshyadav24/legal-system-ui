@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMessage } from '../store/slices/chatsSlice'
 import { sendQuery } from '../services/api'
@@ -14,15 +14,15 @@ function Chatbot({ userType, chatId, chat }) {
 
 // Reset messages when chatId changes - no longer needed as messages are in Redux
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  }, [])
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages])
+  }, [messages, scrollToBottom])
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!inputValue.trim() || isLoading) return
 
     const userMessage = {
@@ -60,14 +60,14 @@ function Chatbot({ userType, chatId, chat }) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [inputValue, isLoading, dispatch, chatId, messages, userType])
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = useCallback((e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
-  }
+  }, [handleSend])
 
   return (
     <div className="chatbot-container">
@@ -137,4 +137,4 @@ function Chatbot({ userType, chatId, chat }) {
   )
 }
 
-export default Chatbot
+export default React.memo(Chatbot)

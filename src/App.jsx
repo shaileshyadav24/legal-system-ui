@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserType, resetUser } from './store/slices/userSlice'
 import { setChats, addChat, setActiveChat, deleteChat } from './store/slices/chatsSlice'
-import UserTypeModal from './components/UserTypeModal'
-import Chatbot from './components/Chatbot'
-import ChatSidebar from './components/ChatSidebar'
 import './App.scss'
 import { startNewChat } from './services/api'
+
+// Lazy load components
+const UserTypeModal = lazy(() => import('./components/UserTypeModal'))
+const Chatbot = lazy(() => import('./components/Chatbot'))
+const ChatSidebar = lazy(() => import('./components/ChatSidebar'))
 function App() {
   const dispatch = useDispatch()
   const { userType, showModal } = useSelector(state => state.user)
@@ -25,12 +27,12 @@ function App() {
     localStorage.setItem('chats', JSON.stringify(chats))
   }, [chats])
 
-  const handleUserTypeSelect = (type) => {
+  const handleUserTypeSelect = useCallback((type) => {
     dispatch(setUserType(type))
     localStorage.setItem('userType', type)
-  }
+  }, [dispatch])
 
-  const handleNewChat = async () => {
+  const handleNewChat = useCallback(async () => {
     const newChat = {
       id: Date.now().toString(),
       title: 'New Chat',
@@ -44,53 +46,57 @@ function App() {
     }).catch(error => {
       console.error('Failed to start new chat:', error)
     })
-  }
+  }, [dispatch, userType])
 
-  const handleSelectChat = (chatId) => {
+  const handleSelectChat = useCallback((chatId) => {
     dispatch(setActiveChat(chatId))
-  }
+  }, [dispatch])
 
-  const changeUserType = () => {
+  const changeUserType = useCallback(() => {
     localStorage.removeItem('userType')
     dispatch(resetUser())
-  }
+  }, [dispatch])
 
-  const deleteChat = (chatId) => {
+  const deleteChat = useCallback((chatId) => {
     dispatch(deleteChat(chatId))
-  }
+  }, [dispatch])
 
-  const activeChat = chats.find(chat => chat.id === activeChatId)
+  const activeChat = useMemo(() => chats.find(chat => chat.id === activeChatId), [chats, activeChatId])
 
   return (
     <div className="app">
       {showModal && (
-        <UserTypeModal onSelect={handleUserTypeSelect} />
+        <Suspense fallback={<div className="loading">Loading...</div>}>
+          <UserTypeModal onSelect={handleUserTypeSelect} />
+        </Suspense>
       )}
       {!showModal && userType && (
-        <div className="app-layout">
-          <ChatSidebar
-            chats={chats}
-            activeChatId={activeChatId}
-            onSelectChat={handleSelectChat}
-            onNewChat={handleNewChat}
-            onUserTypeChange={changeUserType}
-            userType={userType}
-            onDeleteChat={deleteChat}
-          />
-          <div className="chat-panel">
-            {activeChatId ? (
-              <Chatbot
-                userType={userType}
-                chatId={activeChatId}
-                chat={activeChat}
-              />
-            ) : (
-              <div className="no-chat-selected">
-                <h2>Select a chat or start a new one</h2>
-              </div>
-            )}
+        <Suspense fallback={<div className="loading">Loading chat...</div>}>
+          <div className="app-layout">
+            <ChatSidebar
+              chats={chats}
+              activeChatId={activeChatId}
+              onSelectChat={handleSelectChat}
+              onNewChat={handleNewChat}
+              onUserTypeChange={changeUserType}
+              userType={userType}
+              onDeleteChat={deleteChat}
+            />
+            <div className="chat-panel">
+              {activeChatId ? (
+                <Chatbot
+                  userType={userType}
+                  chatId={activeChatId}
+                  chat={activeChat}
+                />
+              ) : (
+                <div className="no-chat-selected">
+                  <h2>Select a chat or start a new one</h2>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </Suspense>
       )}
     </div>
   )
