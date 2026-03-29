@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "title": "Legal System",
+    "newChat": "+ New Chat",
+    "emptyChats": "No chats yet",
+    "emptyHint": "Start a new conversation",
+    "profile": {
+      "defaultName": "Guest User",
+      "defaultType": "Unknown"
+    },
+    "signOut": "Sign Out",
+    "deleteChat": "✕"
+  },
+  "chatbot": {
+    "headerTitle": "Legal Chat",
+    "noChatSelected": "Select a chat or start a new one",
+    "inputPlaceholder": "Type your message...",
+    "sendButton": "Send",
+    "relatedLinksLabel": "Related Links:",
+    "errorMessage": "Sorry, I encountered an error. Please try again.",
+    "newChatTitle": "New Chat"
+  },
+  "loading": {
+    "components": "Loading chat components..."
+  }
+}

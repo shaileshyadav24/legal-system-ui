@@ -1,0 +1,13 @@
+{
+  "brand": { "logo": "⚖️", "title": "Lawyer Bot", "subtitle": "The AI assistant for your legal needs" },
+  "heading": "Login",
+  "fields": {
+    "email": "Email",
+    "password": "Password"
+  },
+  "submitButton": "Log in",
+  "subLinks": {
+    "forgotPassword": "Forgot password?",
+    "createAccount": "Create account"
+  }
+}

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveChat } from '../store/slices/chatsSlice'
+import { usePageContent } from '../hooks/usePageContent'
 
 const ChatSidebar = lazy(() => import('../components/ChatSidebar'))
 const Chatbot = lazy(() => import('../components/Chatbot'))
@@ -9,6 +10,12 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
   const dispatch = useDispatch()
   const { userType, userName } = useSelector(state => state.user)
   const { chats, activeChatId } = useSelector(state => state.chats)
+  const { content, status } = usePageContent('chat')
+
+  const sidebarContent = content?.sidebar || {}
+  const chatbotContent = content?.chatbot || {}
+  const loadingText = content?.loading?.components || 'Loading chat components...'
+  const noChatSelectedText = chatbotContent.noChatSelected || 'Select a chat or start a new one'
 
   const activeChat = useMemo(() => chats.find(chat => chat.id === activeChatId), [chats, activeChatId])
 
@@ -17,7 +24,7 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
   }, [dispatch])
 
   return (
-    <Suspense fallback={<div className="loading">Loading chat components...</div>}>
+    <Suspense fallback={<div className="loading">{loadingText}</div>}>
       <div className="app-layout">
         <ChatSidebar
           chats={chats}
@@ -28,6 +35,7 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
           onSignOut={onSignOut}
           userType={userType}
           userName={userName}
+          content={sidebarContent}
         />
         <div className="chat-panel">
           {activeChatId ? (
@@ -35,10 +43,11 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
               userType={userType}
               chatId={activeChatId}
               chat={activeChat}
+              content={chatbotContent}
             />
           ) : (
             <div className="no-chat-selected">
-              <h2>Select a chat or start a new one</h2>
+              <h2>{noChatSelectedText}</h2>
             </div>
           )}
         </div>

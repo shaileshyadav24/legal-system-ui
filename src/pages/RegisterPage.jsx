@@ -5,8 +5,15 @@ import { setUserProfile, loginSuccess } from '../store/slices/userSlice'
 import { registerUser } from '../services/authService'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
+import { usePageContent } from '../hooks/usePageContent'
 
 function RegisterPage() {
+  const { content, status } = usePageContent('register')
+  const brand = content?.brand ?? { logo: '⚖️', title: 'Review contracts', subtitle: 'with AI Lawyer' }
+  const fields = content?.fields ?? { name: 'Name', userType: 'User Type', email: 'Email', password: 'Password', confirm: 'Re-enter Password' }
+  const submitLabel = content?.submitButton ?? 'Create account'
+  const links = content?.subLinks ?? { haveAccount: 'Already have account? Login' }
+  const userTypeOptions = content?.userTypeOptions ?? [{ value: 'layman', label: 'Layman' }, { value: 'lawyer', label: 'Lawyer' }]
   const [name, setName] = useState('')
   const [userType, setUserType] = useState('layman')
   const [email, setEmail] = useState('')
@@ -39,25 +46,37 @@ function RegisterPage() {
     }
   }
 
+  if (status === 'loading' && !content) {
+    return <div className="auth-page">Loading...</div>
+  }
+
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <h2>Register</h2>
-        <form onSubmit={onSubmit}>
-          <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-          <label>User Type</label>
-          <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-            <option value="layman">Layman</option>
-            <option value="lawyer">Lawyer</option>
-          </select>
-          <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <Input label="Re-enter Password" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+      <div className="auth-card auth-brand-card">
+        <div className="brand-top">
+          <div className="brand-logo">{brand.logo}</div>
+          <h1>{brand.title}</h1>
+          <p className="brand-subtitle">{brand.subtitle}</p>
+        </div>
+
+        <form onSubmit={onSubmit} className="auth-form">
+          <Input label={fields.name} value={name} onChange={(e) => setName(e.target.value)} required />
+          <div className="ui-input-wrapper">
+            <label className="ui-input-label">{fields.userType}</label>
+            <select className="ui-input" value={userType} onChange={(e) => setUserType(e.target.value)}>
+              {userTypeOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+          <Input label={fields.email} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input label={fields.password} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input label={fields.confirm} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           {error && <p className="auth-error">{error}</p>}
-          <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? 'Registering...' : 'Register'}</Button>
+          <Button type="submit" disabled={loading} variant="primary" size="lg">{loading ? 'Creating account...' : submitLabel}</Button>
         </form>
         <div className="auth-links">
-          <Link to="/login">Already have account? Login</Link>
+          <Link to="/login">{links.haveAccount}</Link>
         </div>
       </div>
     </div>

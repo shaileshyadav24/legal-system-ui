@@ -1,0 +1,19 @@
+{
+  "brand": { "logo": "⚖️", "title": "Lawyer Bot", "subtitle": "The AI assistant for your legal needs" },
+  "heading": "Register",
+  "fields": {
+    "name": "Name",
+    "userType": "User Type",
+    "email": "Email",
+    "password": "Password",
+    "confirm": "Re-enter Password"
+  },
+  "userTypeOptions": [
+    { "value": "layman", "label": "Layman" },
+    { "value": "lawyer", "label": "Lawyer" }
+  ],
+  "submitButton": "Create account",
+  "subLinks": {
+    "haveAccount": "Already have account? Login"
+  }
+}

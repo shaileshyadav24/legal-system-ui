@@ -6,11 +6,19 @@ import Button from './ui/Button'
 import Input from './ui/Input'
 import './Chatbot.scss'
 
-function Chatbot({ userType, chatId, chat }) {
+function Chatbot({ userType, chatId, chat, content }) {
   const dispatch = useDispatch()
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null)
+  const headerTitle = content?.headerTitle || 'Legal Chat'
+  const inputPlaceholder = content?.inputPlaceholder || 'Type your message...'
+  const sendButton = content?.sendButton || 'Send'
+  const relatedLinksLabel = content?.relatedLinksLabel || 'Related Links:'
+  const errorText = content?.errorMessage || 'Sorry, I encountered an error. Please try again.'
+  const defaultResponse = content?.defaultResponse || 'I received your message.'
+  const newChatTitle = content?.newChatTitle || 'New Chat'
+  const noChatSelectedText = content?.noChatSelected || 'Select a chat or start a new one'
 
   const messages = chat ? chat.messages || [] : []
 
@@ -43,7 +51,7 @@ function Chatbot({ userType, chatId, chat }) {
 
     try {
       const response = await sendQuery(inputValue, userType, history)
-      let responseText = response.answer || response.text || response.message || 'I received your message.'
+      let responseText = response.answer || response.text || response.message || defaultResponse
       // Remove "Response:" prefix if present
       responseText = responseText.replace(/^Response:\s*/i, '').trim()
       const botMessage = {
@@ -54,7 +62,7 @@ function Chatbot({ userType, chatId, chat }) {
       dispatch(addMessage({ chatId, message: botMessage }))
     } catch (error) {
       const errorMessage = {
-        text: 'Sorry, I encountered an error. Please try again.',
+        text: errorText,
         sender: 'bot'
       }
       dispatch(addMessage({ chatId, message: errorMessage }))
@@ -74,7 +82,7 @@ function Chatbot({ userType, chatId, chat }) {
   return (
     <div className="chatbot-container">
       <div className="chatbot-header">
-        <h1>Legal Chat</h1>
+        <h1>{headerTitle}</h1>
       </div>
       <div className="messages-container">
         {messages.map((message, index) => (
@@ -90,7 +98,7 @@ function Chatbot({ userType, chatId, chat }) {
             {message.urls && message.urls.length > 0 && (
               <>
                 <ol className="message-urls">
-                  <b>Related Links:</b>
+                  <b>{relatedLinksLabel}</b>
                   {message.urls.map((url, idx) => (
                     <li key={idx}>
                       <a href={url} target="_blank" rel="noopener noreferrer" className="message-url">
@@ -123,7 +131,7 @@ function Chatbot({ userType, chatId, chat }) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
+          placeholder={inputPlaceholder}
           disabled={isLoading}
         />
         <Button
@@ -132,7 +140,7 @@ function Chatbot({ userType, chatId, chat }) {
           variant="primary"
           size="md"
         >
-          Send
+          {sendButton}
         </Button>
       </div>
     </div>

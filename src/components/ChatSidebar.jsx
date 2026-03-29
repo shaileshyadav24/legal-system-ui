@@ -2,31 +2,30 @@ import Card from './ui/Card'
 import Button from './ui/Button'
 import './ChatSidebar.scss'
 
-function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, userName, onUserTypeChange, onSignOut, onDeleteChat }) {
+function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, userName, onUserTypeChange, onSignOut, onDeleteChat, content }) {
+  const title = content?.title || 'Legal System'
+  const newChatText = content?.newChat || '+ New Chat'
+  const emptyChatsText = content?.emptyChats || 'No chats yet'
+  const emptyHint = content?.emptyHint || 'Start a new conversation'
+  const profileName = userName || content?.profile?.defaultName || 'Guest User'
+  const profileType = userType || content?.profile?.defaultType || 'Unknown'
+  const signOutText = content?.signOut || 'Sign Out'
+  const deleteIcon = content?.deleteChat || '✕'
+
   return (
     <div className="chat-sidebar">
       <div className="sidebar-header">
-        <h2>Legal System</h2>
+        <h2>{title}</h2>
         <Button onClick={onUserTypeChange} variant="secondary" size="sm">{userType}</Button>
       </div>
       <Button onClick={onNewChat} variant="primary" size="md" className="new-chat-button">
-        + New Chat
+        {newChatText}
       </Button>
-      <div className="sidebar-footer">
-        <div className="sidebar-profile">
-          <div className="profile-icon">👤</div>
-          <div>
-            <div className="profile-name">{userName || 'Guest User'}</div>
-            <div className="profile-type">{userType || 'Unknown'}</div>
-          </div>
-        </div>
-        <Button onClick={onSignOut} variant="secondary" size="sm" className="signout-button">Sign Out</Button>
-      </div>
       <div className="chats-list">
         {chats.length === 0 ? (
           <div className="empty-chats">
-            <p>No chats yet</p>
-            <p className="empty-hint">Start a new conversation</p>
+            <p>{emptyChatsText}</p>
+            <p className="empty-hint">{emptyHint}</p>
           </div>
         ) : (
           chats.map((chat) => (
@@ -37,14 +36,14 @@ function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, u
             >
               <div className="chat-item-preview">
                 <div className="chat-item-title">
-                  <span>{chat.title || 'New Chat'}</span>
+                  <span>{chat.title || content?.newChatTitle || 'New Chat'}</span>
                   <Button
                     className="delete-icon"
                     variant="danger"
                     size="sm"
                     onClick={(e) => { e.stopPropagation(); onDeleteChat(chat.id)}}
                   >
-                    ✕
+                    {deleteIcon}
                   </Button>
                 </div>
               </div>
@@ -52,6 +51,16 @@ function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, u
             </Card>
           ))
         )}
+      </div>
+      <div className="sidebar-footer">
+        <div className="sidebar-profile">
+          <div className="profile-icon">👤</div>
+          <div>
+            <div className="profile-name">{profileName}</div>
+            <div className="profile-type">{profileType}</div>
+          </div>
+        </div>
+        <Button onClick={onSignOut} variant="secondary" size="sm" className="signout-button">{signOutText}</Button>
       </div>
     </div>
   )
