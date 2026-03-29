@@ -1,47 +1,36 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserType, resetUser } from './store/slices/userSlice'
+import { setChats, addChat, setActiveChat, deleteChat } from './store/slices/chatsSlice'
 import UserTypeModal from './components/UserTypeModal'
 import Chatbot from './components/Chatbot'
 import ChatSidebar from './components/ChatSidebar'
 import './App.scss'
-
+import { startNewChat } from './services/api'
 function App() {
-  const [userType, setUserType] = useState(null)
-  const [showModal, setShowModal] = useState(true)
-  const [chats, setChats] = useState([])
-  const [activeChatId, setActiveChatId] = useState(null)
+  const dispatch = useDispatch()
+  const { userType, showModal } = useSelector(state => state.user)
+  const { chats, activeChatId } = useSelector(state => state.chats)
 
   useEffect(() => {
     // Check if user type is already stored in localStorage
     const storedUserType = localStorage.getItem('userType')
     if (storedUserType) {
-      setUserType(storedUserType)
-      setShowModal(false)
+      dispatch(setUserType(storedUserType))
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
-    // Load chats from localStorage only once on mount
-    const storedChats = localStorage.getItem('chats')
-    if (storedChats) {
-      try {
-        const parsedChats = JSON.parse(storedChats)
-        setChats(parsedChats)
-        if (parsedChats.length > 0) {
-          setActiveChatId(parsedChats[0].id)
-        }
-      } catch (error) {
-        console.error('Failed to parse chats from localStorage:', error)
-      }
-    }
-  }, [])
+    // Save chats to localStorage whenever chats change
+    localStorage.setItem('chats', JSON.stringify(chats))
+  }, [chats])
 
   const handleUserTypeSelect = (type) => {
-    setUserType(type)
-    setShowModal(false)
+    dispatch(setUserType(type))
     localStorage.setItem('userType', type)
   }
 
-  const handleNewChat = () => {
+  const handleNewChat = async () => {
     const newChat = {
       id: Date.now().toString(),
       title: 'New Chat',
@@ -49,37 +38,25 @@ function App() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       messages: []
     }
-    const updatedChats = [newChat, ...chats]
-    setChats(updatedChats)
-    setActiveChatId(newChat.id)
-    localStorage.setItem('chats', JSON.stringify(updatedChats))
+    await startNewChat().then(data => {
+      newChat.id = data.session_id
+      dispatch(addChat({ ...newChat, userType }))
+    }).catch(error => {
+      console.error('Failed to start new chat:', error)
+    })
   }
 
   const handleSelectChat = (chatId) => {
-    setActiveChatId(chatId)
-  }
-
-  const handleUpdateChat = (chatId, updates) => {
-    // const updatedChats = chats.map(chat => 
-    //   chat.id === chatId ? { ...chat, ...updates } : chat
-    // )
-    // setChats(updatedChats)
-    // localStorage.setItem('chats', JSON.stringify(updatedChats))
+    dispatch(setActiveChat(chatId))
   }
 
   const changeUserType = () => {
     localStorage.removeItem('userType')
-    setUserType(null)
-    setShowModal(true)
+    dispatch(resetUser())
   }
 
   const deleteChat = (chatId) => {
-    const updatedChats = chats.filter(chat => chat.id !== chatId)
-    setChats(updatedChats)
-    localStorage.setItem('chats', JSON.stringify(updatedChats))
-    if (activeChatId === chatId) {
-      setActiveChatId(updatedChats.length > 0 ? updatedChats[0].id : null)
-    }
+    dispatch(deleteChat(chatId))
   }
 
   const activeChat = chats.find(chat => chat.id === activeChatId)
@@ -106,7 +83,6 @@ function App() {
                 userType={userType}
                 chatId={activeChatId}
                 chat={activeChat}
-                onUpdateChat={handleUpdateChat}
               />
             ) : (
               <div className="no-chat-selected">

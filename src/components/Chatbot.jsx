@@ -1,43 +1,18 @@
 import { useState, useRef, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { addMessage } from '../store/slices/chatsSlice'
 import { sendQuery } from '../services/api'
 import './Chatbot.scss'
 
-function Chatbot({ userType, chatId, chat, onUpdateChat }) {
-  const [messages, setMessages] = useState([
-    {
-      text: `Hello! You are logged in as a ${userType}. How can I help you today?`,
-      sender: 'bot'
-    }
-  ])
+function Chatbot({ userType, chatId, chat }) {
+  const dispatch = useDispatch()
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null)
 
-  // Reset messages when chatId changes
-  useEffect(() => {
-    if (chat && chat.messages && chat.messages.length > 0) {
-      // Only update if messages are different
-      const isDifferent =
-        chat.messages.length !== messages.length ||
-        chat.messages.some((m, i) => m.text !== messages[i]?.text || m.sender !== messages[i]?.sender)
-      if (isDifferent) {
-        setMessages(chat.messages)
-      }
-    } else {
-      if (
-        messages.length !== 1 ||
-        messages[0].sender !== 'bot' ||
-        messages[0].text !== `Hello! You are logged in as a ${userType}. How can I help you today?`
-      ) {
-        setMessages([
-          {
-            text: `Hello! You are logged in as a ${userType}. How can I help you today?`,
-            sender: 'bot'
-          }
-        ])
-      }
-    }
-  }, [chatId, userType, chat])
+  const messages = chat ? chat.messages || [] : []
+
+// Reset messages when chatId changes - no longer needed as messages are in Redux
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -47,22 +22,6 @@ function Chatbot({ userType, chatId, chat, onUpdateChat }) {
     scrollToBottom()
   }, [messages])
 
-  useEffect(() => {
-    // Update chat title and save messages when messages change
-    if (messages.length > 1 && onUpdateChat) {
-      const firstUserMessage = messages.find(m => m.sender === 'user')
-      if (firstUserMessage) {
-        const title = firstUserMessage.text.substring(0, 50)
-        onUpdateChat(chatId, {
-          title: title.length < firstUserMessage.text.length ? title + '...' : title,
-          lastMessage: messages[messages.length - 1].text.substring(0, 60),
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          messages: messages
-        })
-      }
-    }
-  }, [messages, chatId, onUpdateChat])
-
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading) return
 
@@ -71,7 +30,7 @@ function Chatbot({ userType, chatId, chat, onUpdateChat }) {
       sender: 'user'
     }
 
-    setMessages(prev => [...prev, userMessage])
+    dispatch(addMessage({ chatId, message: userMessage }))
     setInputValue('')
     setIsLoading(true)
 
@@ -90,13 +49,13 @@ function Chatbot({ userType, chatId, chat, onUpdateChat }) {
         urls: response.urls || [],
         sender: 'bot'
       }
-      setMessages(prev => [...prev, botMessage])
+      dispatch(addMessage({ chatId, message: botMessage }))
     } catch (error) {
       const errorMessage = {
         text: 'Sorry, I encountered an error. Please try again.',
         sender: 'bot'
       }
-      setMessages(prev => [...prev, errorMessage])
+      dispatch(addMessage({ chatId, message: errorMessage }))
       console.error('Error sending message:', error)
     } finally {
       setIsLoading(false)
