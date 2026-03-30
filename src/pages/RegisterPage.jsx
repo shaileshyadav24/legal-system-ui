@@ -47,7 +47,7 @@ function RegisterPage() {
   }
 
   if (status === 'loading' && !content) {
-    return <div className="auth-page">Loading...</div>
+    return <div className="auth-page auth-page--loading">Loading...</div>
   }
 
   return (

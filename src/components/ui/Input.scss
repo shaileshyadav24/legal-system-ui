@@ -23,11 +23,11 @@
 
 .ui-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(67, 92, 245, 0.2);
+  border-color: var(--color-border-lg);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .ui-input:disabled {
-  background: #e0e7ff;
+  background: var(--color-input-disabled-bg);
   color: var(--color-muted);
 }

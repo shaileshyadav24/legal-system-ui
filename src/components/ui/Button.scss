@@ -23,7 +23,7 @@
 }
 
 .ui-button-secondary:hover:not(:disabled) {
-  background: #e9efff;
+  background: var(--color-secondary-hover);
 }
 
 .ui-button-danger {

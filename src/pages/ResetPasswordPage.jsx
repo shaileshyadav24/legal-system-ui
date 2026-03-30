@@ -47,7 +47,7 @@ function ResetPasswordPage() {
   }
 
   if (contentStatus === 'loading' && !content) {
-    return <div className="auth-page">Loading...</div>
+    return <div className="auth-page auth-page--loading">Loading...</div>
   }
 
   return (

@@ -21,9 +21,16 @@ const chatsSlice = createSlice({
         text: `Hello! You are logged in as a ${userType}. How can I help you today?`,
         sender: 'bot'
       }
-      const newChat = { ...chatData, messages: [initialMessage] }
+      const newChat = { ...chatData, messages: [initialMessage], isPinned: false }
       state.chats.unshift(newChat)
       state.activeChatId = newChat.id
+    },
+    togglePinChat: (state, action) => {
+      const chatId = action.payload
+      const chat = state.chats.find(item => item.id === chatId)
+      if (chat) {
+        chat.isPinned = !chat.isPinned
+      }
     },
     setActiveChat: (state, action) => {
       state.activeChatId = action.payload
@@ -60,5 +67,5 @@ const chatsSlice = createSlice({
   }
 })
 
-export const { setChats, addChat, setActiveChat, updateChat, deleteChat, addMessage } = chatsSlice.actions
+export const { setChats, addChat, togglePinChat, setActiveChat, updateChat, deleteChat, addMessage } = chatsSlice.actions
 export default chatsSlice.reducer

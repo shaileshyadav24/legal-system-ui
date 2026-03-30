@@ -1,8 +1,9 @@
 import Card from './ui/Card'
 import Button from './ui/Button'
+import ChatSidebarItem from './ChatSidebarItem'
 import './ChatSidebar.scss'
 
-function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, userName, onUserTypeChange, onSignOut, onDeleteChat, content }) {
+function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, userName, onUserTypeChange, onSignOut, onDeleteChat, onTogglePinChat, content }) {
   const title = content?.title || 'Legal System'
   const newChatText = content?.newChat || '+ New Chat'
   const emptyChatsText = content?.emptyChats || 'No chats yet'
@@ -28,28 +29,41 @@ function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, u
             <p className="empty-hint">{emptyHint}</p>
           </div>
         ) : (
-          chats.map((chat) => (
-            <Card
-              key={chat.id}
-              className={`chat-item ${activeChatId === chat.id ? 'active' : ''}`}
-              onClick={() => onSelectChat(chat.id)}
-            >
-              <div className="chat-item-preview">
-                <div className="chat-item-title">
-                  <span>{chat.title || content?.newChatTitle || 'New Chat'}</span>
-                  <Button
-                    className="delete-icon"
-                    variant="danger"
-                    size="sm"
-                    onClick={(e) => { e.stopPropagation(); onDeleteChat(chat.id)}}
-                  >
-                    {deleteIcon}
-                  </Button>
-                </div>
-              </div>
-              <div className="chat-item-time">{chat.timestamp || ''}</div>
-            </Card>
-          ))
+          <>
+            {chats.filter(chat => chat.isPinned).length > 0 && (
+              <section className="sidebar-section">
+                <h3>Pinned chats</h3>
+                {chats.filter(chat => chat.isPinned).map((chat) => (
+                  <ChatSidebarItem
+                    key={chat.id}
+                    chat={chat}
+                    isActive={activeChatId === chat.id}
+                    onSelect={onSelectChat}
+                    onTogglePin={onTogglePinChat}
+                    onDelete={onDeleteChat}
+                    content={content}
+                    showDelete={false}
+                  />
+                ))}
+              </section>
+            )}
+
+            <section className="sidebar-section">
+              <h3>History</h3>
+              {chats.filter(chat => !chat.isPinned).map((chat) => (
+                <ChatSidebarItem
+                  key={chat.id}
+                  chat={chat}
+                  isActive={activeChatId === chat.id}
+                  onSelect={onSelectChat}
+                  onTogglePin={onTogglePinChat}
+                  onDelete={onDeleteChat}
+                  content={content}
+                  showDelete
+                />
+              ))}
+            </section>
+          </>
         )}
       </div>
       <div className="sidebar-footer">

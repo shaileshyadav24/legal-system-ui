@@ -78,8 +78,8 @@ input {
   transition: all 0.2s ease;
 }
 
-/* Common Typography */
-$font-family-primary: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+/* Common Typography — iOS-friendly stack for chat UI */
+$font-family-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
 $font-family-mono: 'Courier New', monospace;
 
 body {

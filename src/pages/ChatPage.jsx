@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveChat } from '../store/slices/chatsSlice'
+import { setActiveChat, togglePinChat, deleteChat } from '../store/slices/chatsSlice'
 import { usePageContent } from '../hooks/usePageContent'
 
 const ChatSidebar = lazy(() => import('../components/ChatSidebar'))
@@ -23,6 +23,14 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
     dispatch(setActiveChat(chatId))
   }, [dispatch])
 
+  const handleTogglePinChat = useCallback((chatId) => {
+    dispatch(togglePinChat(chatId))
+  }, [dispatch])
+
+  const handleDeleteChat = useCallback((chatId) => {
+    dispatch(deleteChat(chatId))
+  }, [dispatch])
+
   return (
     <Suspense fallback={<div className="loading">{loadingText}</div>}>
       <div className="app-layout">
@@ -31,6 +39,8 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
           activeChatId={activeChatId}
           onSelectChat={handleSelectChat}
           onNewChat={onNewChat}
+          onTogglePinChat={handleTogglePinChat}
+          onDeleteChat={handleDeleteChat}
           onUserTypeChange={onUserTypeChange}
           onSignOut={onSignOut}
           userType={userType}
