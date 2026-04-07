@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { addMessage, updateChat } from '../store/slices/chatsSlice'
-import ChatbotHeader from './ChatbotHeader'
 import ChatbotMessageList from './ChatbotMessageList'
 import ChatbotInputArea from './ChatbotInputArea'
 import { createUserMessage, createBotMessage, createErrorMessage, buildChatHistory, queryAI } from '../services/chatbotService'
@@ -98,16 +97,6 @@ function Chatbot({ userType, chatId, chat, content }) {
 
   return (
     <div className="chatbot-container">
-      <ChatbotHeader
-        title={headerTitle}
-        editableTitle={editableTitle}
-        onTitleChange={setEditableTitle}
-        onTitleSave={handleTitleSave}
-        onTogglePin={handleTogglePin}
-        onSave={handleTitleSave}
-        onSettings={() => { /* placeholder */ }}
-      />
-
       <ChatbotMessageList
         messages={messages}
         messagesEndRef={messagesEndRef}

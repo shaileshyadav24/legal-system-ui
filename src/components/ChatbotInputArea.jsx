@@ -29,12 +29,6 @@ function ChatbotInputArea({
             placeholder={placeholder}
             disabled={isLoading}
           />
-          <button type="button" className="mic-btn" title="Voice input" onClick={onVoice}>🎙</button>
-        </div>
-
-        <div className="toggles">
-          <button type="button" className={`toggle-tab ${isInternetEnabled ? 'active' : ''}`} onClick={onToggleInternet}>Internet</button>
-          <button type="button" className={`toggle-tab ${isPromptMode ? 'active' : ''}`} onClick={onTogglePrompt}>Prompts</button>
         </div>
 
         <Button

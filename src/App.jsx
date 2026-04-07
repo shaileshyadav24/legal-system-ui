@@ -36,14 +36,15 @@ function App() {
   }, [chats])
 
   const handleNewChat = useCallback(async () => {
-    const state = JSON.parse(localStorage.getItem('authUser') || '{}')
-    const userType = state?.userType || 'layman'
-    try {
-      const newChat = await startChatSession(userType)
-      dispatch(addChat(newChat))
-    } catch (error) {
-      console.error('Failed to start new chat:', error)
-    }
+    dispatch(addChat({ userType: 'layman', title: 'New Chat', id: Math.random() }))
+    // const state = JSON.parse(localStorage.getItem('authUser') || '{}')
+    // const userType = state?.userType || 'layman'
+    // try {
+    //   const newChat = await startChatSession(userType)
+    //   dispatch(addChat(newChat))
+    // } catch (error) {
+    //   console.error('Failed to start new chat:', error)
+    // }
   }, [dispatch])
 
   const handleSignOut = useCallback(() => {

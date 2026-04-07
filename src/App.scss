@@ -98,7 +98,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   font-size: 1.2rem;
   color: var(--color-primary);
 }
@@ -117,7 +116,7 @@
     linear-gradient(165deg, #050506 0%, #0c0c0e 42%, #080809 100%);
 }
 
-.auth-page a {
+.auth-page a, a {
   color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
 }

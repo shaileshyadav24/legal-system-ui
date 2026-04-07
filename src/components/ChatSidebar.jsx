@@ -3,7 +3,7 @@ import Button from './ui/Button'
 import ChatSidebarItem from './ChatSidebarItem'
 import './ChatSidebar.scss'
 
-function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, userName, onUserTypeChange, onSignOut, onDeleteChat, onTogglePinChat, content }) {
+function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, userName, onUserTypeChange, onSignOut, onDeleteChat, onTogglePinChat, content, isCollapsed, onToggleCollapse }) {
   const title = content?.title || 'Legal System'
   const newChatText = content?.newChat || '+ New Chat'
   const emptyChatsText = content?.emptyChats || 'No chats yet'
@@ -14,10 +14,14 @@ function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, u
   const deleteIcon = content?.deleteChat || '✕'
 
   return (
-    <div className="chat-sidebar">
+    <div className={`chat-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
         <h2>{title}</h2>
-        <Button onClick={onUserTypeChange} variant="secondary" size="sm">{userType}</Button>
+        <div className="header-actions">
+          <Button onClick={onToggleCollapse} variant="secondary" size="sm" className="toggle-button" title={isCollapsed ? 'Expand' : 'Collapse'}>
+            {isCollapsed ? '→' : '←'}
+          </Button>
+        </div>
       </div>
       <Button onClick={onNewChat} variant="primary" size="md" className="new-chat-button">
         {newChatText}

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useCallback } from 'react'
+import { lazy, Suspense, useMemo, useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveChat, togglePinChat, deleteChat } from '../store/slices/chatsSlice'
 import { usePageContent } from '../hooks/usePageContent'
@@ -7,6 +7,7 @@ const ChatSidebar = lazy(() => import('../components/ChatSidebar'))
 const Chatbot = lazy(() => import('../components/Chatbot'))
 
 function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const dispatch = useDispatch()
   const { userType, userName } = useSelector(state => state.user)
   const { chats, activeChatId } = useSelector(state => state.chats)
@@ -31,6 +32,10 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
     dispatch(deleteChat(chatId))
   }, [dispatch])
 
+  const handleToggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev)
+  }, [])
+
   return (
     <Suspense fallback={<div className="loading">{loadingText}</div>}>
       <div className="app-layout">
@@ -46,6 +51,8 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
           userType={userType}
           userName={userName}
           content={sidebarContent}
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={handleToggleSidebar}
         />
         <div className="chat-panel">
           {activeChatId ? (

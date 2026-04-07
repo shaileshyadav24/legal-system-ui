@@ -147,7 +147,10 @@
 
 .message-content.loading,
 .message-urls {
-  padding: 1rem 1.25rem;
+  padding: 1rem 0rem;
+  li {
+    margin-left: 20px;
+  }
 }
 
 .loading-dots {
@@ -231,7 +234,6 @@
 }
 
 .input-left {
-  display: flex;
   flex: 1;
   gap: 0.5rem;
   align-items: center;
