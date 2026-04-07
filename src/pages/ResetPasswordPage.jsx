@@ -16,12 +16,7 @@ function ResetPasswordPage() {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
   const { content, status: contentStatus } = usePageContent('reset-password')
-  const brand = content?.brand ?? { logo: '⚖️', title: 'Review contracts', subtitle: 'with AI Lawyer' }
-  const newPasswordLabel = content?.fields?.newPassword ?? 'New Password'
-  const confirmPasswordLabel = content?.fields?.confirmPassword ?? 'Confirm Password'
-  const submitLabel = content?.submitButton ?? 'Reset Password'
-  const backLinkLabel = content?.subLinks?.backLogin ?? 'Back to Login'
-  const updatingText = content?.statusMessages?.updating ?? 'Updating...'
+
   const query = useQuery()
   const token = query.get('token') || 'demo-token'
   const navigate = useNavigate()
@@ -54,21 +49,21 @@ function ResetPasswordPage() {
     <div className="auth-page">
       <div className="auth-card auth-brand-card">
         <div className="brand-top">
-          <div className="brand-logo">{brand.logo}</div>
-          <h1>{brand.title}</h1>
-          <p className="brand-subtitle">{brand.subtitle}</p>
+          <div className="brand-logo">{content?.brand?.logo}</div>
+          <h1>{content?.brand?.title}</h1>
+          <p className="brand-subtitle">{content?.brand?.subtitle}</p>
         </div>
 
         <h2>{content?.heading ?? 'Reset Password'}</h2>
         <form onSubmit={onSubmit} className="auth-form">
-          <Input label={newPasswordLabel} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <Input label={confirmPasswordLabel} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
-          <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? updatingText : submitLabel}</Button>
+          <Input label={content?.fields?.newPassword} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input label={content?.fields?.confirmPassword} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+          <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? content?.statusMessages?.updating : content?.submitButton}</Button>
         </form>
         {success && <p className="auth-success">{success}</p>}
         {error && <p className="auth-error">{error}</p>}
         <div className="auth-links">
-          <Link to="/login">{backLinkLabel}</Link>
+          <Link to="/login">{content?.subLinks?.backLogin}</Link>
         </div>
       </div>
     </div>

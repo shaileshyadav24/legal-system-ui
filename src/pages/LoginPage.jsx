@@ -16,11 +16,6 @@ function LoginPage() {
   const navigate = useNavigate()
   const { content, status } = usePageContent('login')
 
-  const brand = content?.brand ?? { logo: '⚖️', title: 'Review contracts', subtitle: 'with AI Lawyer' }
-  const fields = content?.fields ?? { email: 'Email', password: 'Password' }
-  const submitLabel = content?.submitButton ?? 'Log in'
-  const links = content?.subLinks ?? { forgotPassword: 'Forgot password?', createAccount: 'Create account' }
-
   const onSubmit = async (e) => {
     e.preventDefault()
     setError(null)
@@ -44,21 +39,21 @@ function LoginPage() {
     <div className="auth-page">
       <div className="auth-card auth-brand-card">
         <div className="brand-top">
-          <div className="brand-logo">{brand.logo}</div>
-          <h1>{brand.title}</h1>
-          <p className="brand-subtitle">{brand.subtitle}</p>
+          <div className="brand-logo">{content?.brand?.logo}</div>
+          <h1>{content?.brand?.title}</h1>
+          <p className="brand-subtitle">{content?.brand?.subtitle}</p>
         </div>
 
         <form onSubmit={onSubmit} className="auth-form">
-          <Input label={fields.email} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Input label={fields.password} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input label={content?.fields?.email} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input label={content?.fields?.password} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           {error && <p className="auth-error">{error}</p>}
-          <Button type="submit" disabled={loading} variant="primary" size="lg">{loading ? 'Signing in...' : submitLabel}</Button>
+          <Button type="submit" disabled={loading} variant="primary" size="lg">{loading ? 'Signing in...' : content?.submitButton}</Button>
         </form>
 
         <div className="auth-links">
-          <Link to="/forgot-password">{links.forgotPassword}</Link>
-          <Link to="/register">{links.createAccount}</Link>
+          <Link to="/forgot-password">{content?.subLinks?.forgotPassword}</Link>
+          <Link to="/register">{content?.subLinks?.createAccount}</Link>
         </div>
       </div>
     </div>

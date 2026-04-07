@@ -17,20 +17,13 @@ function Chatbot({ userType, chatId, chat, content }) {
   const messagesEndRef = useRef(null)
   const abortRef = useRef(false)
 
-  const headerTitle = content?.headerTitle || 'Legal Chat'
-  const inputPlaceholder = content?.inputPlaceholder || 'Type your message...'
-  const sendButton = content?.sendButton || 'Send'
-  const relatedLinksLabel = content?.relatedLinksLabel || 'Related Links:'
-  const errorText = content?.errorMessage || 'Sorry, I encountered an error. Please try again.'
-  const defaultResponse = content?.defaultResponse || 'I received your message.'
-
   const messages = useMemo(() => (chat?.messages || []), [chat])
 
   const history = useMemo(() => buildChatHistory(messages), [messages])
 
   useEffect(() => {
-    setEditableTitle(chat?.title || content?.newChatTitle || headerTitle)
-  }, [chat?.title, content?.newChatTitle, headerTitle])
+    setEditableTitle(chat?.title || content?.newChatTitle || content?.headerTitle)
+  }, [chat?.title, content?.newChatTitle, content?.headerTitle])
 
   useEffect(() => {
     setIsResponseStopped(false)
@@ -57,11 +50,11 @@ function Chatbot({ userType, chatId, chat, content }) {
     try {
       const response = await queryAI(inputValue, userType, history)
       if (!abortRef.current) {
-        dispatch(addMessage({ chatId, message: createBotMessage(response, defaultResponse) }))
+        dispatch(addMessage({ chatId, message: createBotMessage(response, content?.defaultResponse) }))
       }
     } catch (error) {
       if (!abortRef.current) {
-        dispatch(addMessage({ chatId, message: createErrorMessage(errorText) }))
+        dispatch(addMessage({ chatId, message: createErrorMessage(content?.errorText) }))
       }
       console.error('Error sending message:', error)
     } finally {
@@ -69,7 +62,7 @@ function Chatbot({ userType, chatId, chat, content }) {
         setIsLoading(false)
       }
     }
-  }, [inputValue, isLoading, dispatch, chatId, userType, history, defaultResponse, errorText])
+  }, [inputValue, isLoading, dispatch, chatId, userType, history, content?.defaultResponse, content?.errorText])
 
   const handleStopResponse = useCallback(() => {
     if (!isLoading) return
@@ -100,7 +93,7 @@ function Chatbot({ userType, chatId, chat, content }) {
       <ChatbotMessageList
         messages={messages}
         messagesEndRef={messagesEndRef}
-        relatedLinksLabel={relatedLinksLabel}
+        relatedLinksLabel={content?.relatedLinksLabel}
         isLoading={isLoading}
       />
 
@@ -120,8 +113,8 @@ function Chatbot({ userType, chatId, chat, content }) {
         isPromptMode={isPromptMode}
         onToggleInternet={() => setIsInternetEnabled((v) => !v)}
         onTogglePrompt={() => setIsPromptMode((v) => !v)}
-        placeholder={inputPlaceholder}
-        sendButtonText={sendButton}
+        placeholder={content?.inputPlaceholder}
+        sendButtonText={content?.sendButton}
       />
     </div>
   )

@@ -7,11 +7,7 @@ import { usePageContent } from '../hooks/usePageContent'
 
 function ForgotPasswordPage() {
   const { content, status: contentStatus } = usePageContent('forgot-password')
-  const brand = content?.brand ?? { logo: '⚖️', title: 'Review contracts', subtitle: 'with AI Lawyer' }
-  const fieldLabel = content?.fields?.email ?? 'Email'
-  const submitLabel = content?.submitButton ?? 'Send reset link'
-  const backLinkLabel = content?.subLinks?.backLogin ?? 'Back to Login'
-  const sendingText = content?.statusMessages?.sending ?? 'Sending...'
+
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('')
   const [error, setError] = useState('')
@@ -40,20 +36,20 @@ function ForgotPasswordPage() {
     <div className="auth-page">
       <div className="auth-card auth-brand-card">
         <div className="brand-top">
-          <div className="brand-logo">{brand.logo}</div>
-          <h1>{brand.title}</h1>
-          <p className="brand-subtitle">{brand.subtitle}</p>
+          <div className="brand-logo">{content?.brand?.logo}</div>
+          <h1>{content?.brand?.title}</h1>
+          <p className="brand-subtitle">{content?.brand?.subtitle}</p>
         </div>
 
         <h2>{content?.heading ?? 'Forgot Password'}</h2>
         <form onSubmit={onSubmit} className="auth-form">
-          <Input label={fieldLabel} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? sendingText : submitLabel}</Button>
+          <Input label={content?.fields?.email} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? content?.statusMessages?.sending : content?.submitButton}</Button>
         </form>
         {status && <p className="auth-success">{status}</p>}
         {error && <p className="auth-error">{error}</p>}
         <div className="auth-links">
-          <Link to="/login">{backLinkLabel}</Link>
+          <Link to="/login">{content?.subLinks?.backLogin}</Link>
         </div>
       </div>
     </div>
