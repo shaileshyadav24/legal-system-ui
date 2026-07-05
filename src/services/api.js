@@ -1,41 +1,49 @@
-const API_URL = 'http://localhost:8000/query/user'
-const API_URL_LAWYER = 'http://localhost:8000/query/lawyer'
+const API_BASE_URL = 'http://localhost:8000'
+const API_URL_USER = `${API_BASE_URL}/query/user`
+const API_URL_LAWYER = `${API_BASE_URL}/query/lawyer`
 
-export const sendQuery = async (query, userType, history = []) => {
-  let url = userType.toLowerCase() === 'lawyer' ? API_URL_LAWYER : API_URL
+export class ApiError extends Error {
+  constructor(message, status) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
+
+export const sendQuery = async (query, userType, history = [], collectionName) => {
+  const url = userType?.toLowerCase() === 'lawyer' ? API_URL_LAWYER : API_URL_USER
+  const body = { query, history }
+  if (collectionName) body.collection_name = collectionName
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      query,
-      user_type: userType,
-      history
-    })
+    body: JSON.stringify(body)
   })
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+  // 204: query understood but no relevant context was found in the collection(s)
+  if (response.status === 204) {
+    return { answer: null, urls: [], noContext: true }
   }
 
-  return await response.json()
-}
-
-export const deleteChat = (chatId) => {
-  // Implement chat deletion logic if needed, e.g., send a request to the backend to delete the chat
-  console.log('Deleting chat with ID:', chatId)
-}
-
-export const startNewChat = async () => {
-  const response = await fetch('http://localhost:8000/chat/start', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    let detail
+    try {
+      const errorBody = await response.json()
+      detail = errorBody?.detail
+    } catch (error) {
+      // no JSON body to parse
+    }
+
+    if (response.status === 404) {
+      throw new ApiError(detail || `Unknown collection: ${collectionName}`, 404)
+    }
+    if (response.status === 500) {
+      throw new ApiError(detail || 'The AI model failed to generate a response.', 500)
+    }
+    throw new ApiError(detail || `Request failed with status ${response.status}`, response.status)
   }
 
   return await response.json()

@@ -4,7 +4,7 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { loginSuccess, resetUser, logout } from './store/slices/userSlice'
 import { setChats, addChat } from './store/slices/chatsSlice'
 import './App.scss'
-import { startChatSession, loadStoredChats, persistChats } from './services/chatService'
+import { loadStoredChats, persistChats } from './services/chatService'
 import { getStoredUser } from './services/authService'
 import ChatPage from './pages/ChatPage'
 import AuthGuard from './components/AuthGuard'
@@ -37,14 +37,6 @@ function App() {
 
   const handleNewChat = useCallback(async () => {
     dispatch(addChat({ userType: 'layman', title: 'New Chat', id: Math.random() }))
-    // const state = JSON.parse(localStorage.getItem('authUser') || '{}')
-    // const userType = state?.userType || 'layman'
-    // try {
-    //   const newChat = await startChatSession(userType)
-    //   dispatch(addChat(newChat))
-    // } catch (error) {
-    //   console.error('Failed to start new chat:', error)
-    // }
   }, [dispatch])
 
   const handleSignOut = useCallback(() => {

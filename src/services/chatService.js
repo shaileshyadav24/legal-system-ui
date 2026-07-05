@@ -1,5 +1,3 @@
-import { startNewChat } from './api'
-
 export const loadStoredUserType = () => {
   if (typeof window === 'undefined') return null
   return localStorage.getItem('userType') || null
@@ -35,29 +33,4 @@ export const persistChats = (chats) => {
   } catch (error) {
     console.error('Failed to persist chats:', error)
   }
-}
-
-export const createChatPayload = (userType) => ({
-  id: Date.now().toString(),
-  title: 'New Chat',
-  lastMessage: '',
-  timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-  messages: [],
-  userType
-})
-
-export const startChatSession = async (userType) => {
-  const payload = createChatPayload(userType)
-
-  try {
-    const data = await startNewChat()
-    if (data?.session_id) {
-      payload.id = data.session_id
-    }
-  } catch (error) {
-    console.error('Failed to start new chat:', error)
-    throw error
-  }
-
-  return payload
 }

@@ -54,7 +54,7 @@ function Chatbot({ userType, chatId, chat, content }) {
       }
     } catch (error) {
       if (!abortRef.current) {
-        dispatch(addMessage({ chatId, message: createErrorMessage(content?.errorText) }))
+        dispatch(addMessage({ chatId, message: createErrorMessage(error, content?.errorText) }))
       }
       console.error('Error sending message:', error)
     } finally {
