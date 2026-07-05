@@ -20,7 +20,7 @@ function ForgotPasswordPage() {
     setLoading(true)
     try {
       const result = await sendPasswordResetEmail(email)
-      setStatus(result.message)
+      setStatus(result.detail)
     } catch (err) {
       setError(err.message)
     } finally {

@@ -13,24 +13,25 @@ export const clearStoredUserType = () => {
   localStorage.removeItem('userType')
 }
 
-export const loadStoredChats = () => {
+// Chat sessions/messages now live server-side; pinning is a client-only
+// preference layered on top, so it's tracked separately by session id.
+const PINNED_STORAGE_KEY = 'pinnedChatIds'
+
+export const loadPinnedChatIds = () => {
   if (typeof window === 'undefined') return []
-  const storedChats = localStorage.getItem('chats')
-  if (!storedChats) return []
   try {
-    const parsed = JSON.parse(storedChats)
+    const parsed = JSON.parse(localStorage.getItem(PINNED_STORAGE_KEY) || '[]')
     return Array.isArray(parsed) ? parsed : []
   } catch (error) {
-    console.error('Failed parse stored chats:', error)
     return []
   }
 }
 
-export const persistChats = (chats) => {
+export const savePinnedChatIds = (ids) => {
   if (typeof window === 'undefined') return
   try {
-    localStorage.setItem('chats', JSON.stringify(chats))
+    localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(ids))
   } catch (error) {
-    console.error('Failed to persist chats:', error)
+    // ignore write failures (e.g. storage disabled)
   }
 }

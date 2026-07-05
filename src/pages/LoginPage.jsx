@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { loginSuccess } from '../store/slices/userSlice'
+import { useUserStore } from '../stores/useUserStore'
 import { authenticate } from '../services/authService'
+import { loadStoredUserType } from '../services/chatService'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 import { usePageContent } from '../hooks/usePageContent'
@@ -12,7 +12,7 @@ function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
+  const loginSuccess = useUserStore((state) => state.loginSuccess)
   const navigate = useNavigate()
   const { content, status } = usePageContent('login')
 
@@ -22,7 +22,7 @@ function LoginPage() {
     setLoading(true)
     try {
       const user = await authenticate(email, password)
-      dispatch(loginSuccess({ email: user.email, name: user.name, userType: user.userType }))
+      loginSuccess({ email: user.email, name: user.full_name, userType: loadStoredUserType() || 'layman' })
       navigate('/chat')
     } catch (err) {
       setError(err.message)

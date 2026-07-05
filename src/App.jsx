@@ -1,11 +1,11 @@
 import { useEffect, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
-import { loginSuccess, resetUser, logout } from './store/slices/userSlice'
-import { setChats, addChat } from './store/slices/chatsSlice'
+import { useUserStore } from './stores/useUserStore'
+import { useChatsStore } from './stores/useChatsStore'
 import './App.scss'
-import { loadStoredChats, persistChats } from './services/chatService'
-import { getStoredUser } from './services/authService'
+import { loadStoredUserType } from './services/chatService'
+import { getStoredUser, fetchCurrentUser, logout as logoutRequest } from './services/authService'
+import { AUTH_STORAGE_KEY } from './services/api'
 import ChatPage from './pages/ChatPage'
 import AuthGuard from './components/AuthGuard'
 import LoginPage from './pages/LoginPage'
@@ -15,36 +15,44 @@ import ResetPasswordPage from './pages/ResetPasswordPage'
 import ThemeToggle from './components/ThemeToggle'
 
 function App() {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { isAuthenticated } = useSelector(state => state.user)
-  const { chats } = useSelector(state => state.chats)
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated)
+  const userType = useUserStore((state) => state.userType)
+  const loginSuccess = useUserStore((state) => state.loginSuccess)
+  const logout = useUserStore((state) => state.logout)
+  const resetUser = useUserStore((state) => state.resetUser)
+  const addDraftChat = useChatsStore((state) => state.addDraftChat)
 
   useEffect(() => {
     const storedUser = getStoredUser()
-    if (storedUser) {
-      dispatch(loginSuccess({ name: storedUser.name, email: storedUser.email, userType: storedUser.userType }))
-    }
+    if (!storedUser?.token) return
 
-    const storedChats = loadStoredChats()
-    if (storedChats.length) {
-      dispatch(setChats(storedChats))
-    }
-  }, [dispatch])
+    loginSuccess({
+      name: storedUser.full_name,
+      email: storedUser.email,
+      userType: loadStoredUserType() || 'layman'
+    })
 
-  useEffect(() => {
-    persistChats(chats)
-  }, [chats])
+    // The cached token may have been revoked from another tab — confirm it's
+    // still valid and drop the session if not.
+    fetchCurrentUser().catch((error) => {
+      if (error?.status === 401) {
+        localStorage.removeItem(AUTH_STORAGE_KEY)
+        logout()
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const handleNewChat = useCallback(async () => {
-    dispatch(addChat({ userType: 'layman', title: 'New Chat', id: Math.random() }))
-  }, [dispatch])
+  const handleNewChat = useCallback(() => {
+    addDraftChat(userType || 'layman')
+  }, [addDraftChat, userType])
 
-  const handleSignOut = useCallback(() => {
-    dispatch(logout())
-    localStorage.removeItem('authUser')
+  const handleSignOut = useCallback(async () => {
+    await logoutRequest()
+    logout()
     navigate('/login')
-  }, [dispatch, navigate])
+  }, [logout, navigate])
 
   return (
     <>
@@ -60,7 +68,7 @@ function App() {
           path="/chat"
           element={
             <AuthGuard>
-              <ChatPage onNewChat={handleNewChat} onUserTypeChange={() => dispatch(resetUser())} onSignOut={handleSignOut} />
+              <ChatPage onNewChat={handleNewChat} onUserTypeChange={() => resetUser()} onSignOut={handleSignOut} />
             </AuthGuard>
           }
         />

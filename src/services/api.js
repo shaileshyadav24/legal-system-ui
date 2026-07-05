@@ -1,6 +1,5 @@
 const API_BASE_URL = 'http://localhost:8000'
-const API_URL_USER = `${API_BASE_URL}/query/user`
-const API_URL_LAWYER = `${API_BASE_URL}/query/lawyer`
+export const AUTH_STORAGE_KEY = 'authUser'
 
 export class ApiError extends Error {
   constructor(message, status) {
@@ -10,41 +9,67 @@ export class ApiError extends Error {
   }
 }
 
-export const sendQuery = async (query, userType, history = [], collectionName) => {
-  const url = userType?.toLowerCase() === 'lawyer' ? API_URL_LAWYER : API_URL_USER
-  const body = { query, history }
-  if (collectionName) body.collection_name = collectionName
+const getStoredToken = () => {
+  if (typeof window === 'undefined') return null
+  try {
+    const stored = JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY) || 'null')
+    return stored?.token || null
+  } catch (error) {
+    return null
+  }
+}
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body)
+// FastAPI/pydantic 422s return `detail` as an array of {msg, loc, type}; other
+// errors return it as a plain string.
+const extractErrorDetail = (body) => {
+  const detail = body?.detail
+  if (Array.isArray(detail)) {
+    return detail.map((item) => item?.msg).filter(Boolean).join('; ')
+  }
+  return typeof detail === 'string' ? detail : undefined
+}
+
+export const apiRequest = async (path, { method = 'GET', body, auth = true } = {}) => {
+  const headers = { 'Content-Type': 'application/json' }
+  if (auth) {
+    const token = getStoredToken()
+    if (token) headers.Authorization = `Bearer ${token}`
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined
   })
 
-  // 204: query understood but no relevant context was found in the collection(s)
+  // 204: success with nothing to return (logout, delete, reset-password) or,
+  // for /query/*, "no relevant context found" — callers tell these apart.
   if (response.status === 204) {
-    return { answer: null, urls: [], noContext: true }
+    return null
   }
 
   if (!response.ok) {
-    let detail
+    let errorBody
     try {
-      const errorBody = await response.json()
-      detail = errorBody?.detail
+      errorBody = await response.json()
     } catch (error) {
       // no JSON body to parse
     }
-
-    if (response.status === 404) {
-      throw new ApiError(detail || `Unknown collection: ${collectionName}`, 404)
-    }
-    if (response.status === 500) {
-      throw new ApiError(detail || 'The AI model failed to generate a response.', 500)
-    }
-    throw new ApiError(detail || `Request failed with status ${response.status}`, response.status)
+    throw new ApiError(extractErrorDetail(errorBody) || `Request failed with status ${response.status}`, response.status)
   }
 
-  return await response.json()
+  return response.json()
+}
+
+export const sendQuery = async (query, userType, { collectionName, sessionId } = {}) => {
+  const path = userType?.toLowerCase() === 'lawyer' ? '/query/lawyer' : '/query/user'
+  const body = { query, collection_name: collectionName || null, session_id: sessionId || null }
+
+  const data = await apiRequest(path, { method: 'POST', body })
+
+  if (data === null) {
+    return { answer: null, urls: [], sessionId: null, noContext: true }
+  }
+
+  return { answer: data.answer, urls: data.urls || [], sessionId: data.session_id }
 }
