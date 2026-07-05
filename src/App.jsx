@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import ThemeToggle from './components/ThemeToggle'
 
 function App() {
   const dispatch = useDispatch()
@@ -46,6 +47,8 @@ function App() {
   }, [dispatch, navigate])
 
   return (
+    <>
+      <ThemeToggle />
       <Routes>
         <Route path="/" element={<Navigate to={isAuthenticated ? '/chat' : '/login'} replace />} />
         <Route path="/login" element={<LoginPage />} />
@@ -64,6 +67,7 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+    </>
   )
 }
 

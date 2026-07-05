@@ -5,59 +5,22 @@
   color: var(--color-text);
 }
 
-/* Shared: iOS-style glass on black (chat + auth) */
-.app-layout,
-.auth-page {
-  --color-background: #0a0a0b;
-  --color-page: transparent;
-  --color-panel: transparent;
-  --color-card: rgba(255, 255, 255, 0.07);
-  --color-sidebar: rgba(255, 255, 255, 0.05);
-  --color-sidebar-alt: rgba(255, 255, 255, 0.04);
-  --color-sidebar-border: rgba(255, 255, 255, 0.12);
-  --color-sidebar-fg: rgba(255, 255, 255, 0.92);
-  --color-text: rgba(255, 255, 255, 0.88);
-  --color-heading: #f5f5f7;
-  --color-muted: rgba(255, 255, 255, 0.52);
-  --color-muted-strong: rgba(255, 255, 255, 0.72);
-  --color-border: rgba(255, 255, 255, 0.14);
-  --color-border-lg: rgba(255, 255, 255, 0.24);
-  --color-shadow: rgba(0, 0, 0, 0.5);
-  --color-primary: #1c1c1e;
-  --color-primary-hover: #2c2c2e;
-  --color-secondary: rgba(255, 255, 255, 0.08);
-  --color-secondary-hover: rgba(255, 255, 255, 0.14);
-  --color-accent: rgba(255, 255, 255, 0.35);
-  --color-input-bg: rgba(255, 255, 255, 0.09);
-  --color-input-border: rgba(255, 255, 255, 0.2);
-  --color-input-disabled-bg: rgba(255, 255, 255, 0.06);
-  --color-white: #f5f5f7;
-  --color-black: #000000;
-  --color-focus-ring: rgba(255, 255, 255, 0.14);
-  --glass-blur: blur(44px) saturate(180%);
-  --glass-surface: rgba(255, 255, 255, 0.07);
-  --glass-stroke: rgba(255, 255, 255, 0.14);
-}
-
 .app-layout {
   display: flex;
   height: 100vh;
   width: 100%;
   overflow: hidden;
+  background: var(--color-background);
   color: var(--color-text);
-  background:
-    radial-gradient(120% 90% at 15% 5%, rgba(90, 100, 140, 0.22) 0%, transparent 50%),
-    radial-gradient(90% 70% at 95% 15%, rgba(50, 80, 140, 0.12) 0%, transparent 45%),
-    linear-gradient(165deg, #050506 0%, #0c0c0e 42%, #080809 100%);
 }
 
 .chat-panel {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1.2rem;
-  background: transparent;
-  border-left: 1px solid var(--glass-stroke);
+  min-width: 0;
+  padding: 1.5rem;
+  background: var(--color-background);
 }
 
 .no-chat-selected {
@@ -66,22 +29,19 @@
   align-items: center;
   justify-content: center;
   color: var(--color-muted);
-  border-radius: 22px;
-  border: 1px solid var(--glass-stroke);
-  background: var(--glass-surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-page);
 }
 
 .no-chat-selected h2 {
-  font-size: 1.55rem;
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
   color: var(--color-muted-strong);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .app-layout {
     flex-direction: column;
     height: auto;
@@ -89,8 +49,9 @@
   }
 
   .chat-panel {
-    height: 60vh;
-    min-height: 400px;
+    height: auto;
+    min-height: 60vh;
+    padding: 1rem;
   }
 }
 
@@ -98,10 +59,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-  color: var(--color-primary);
+  min-height: 100vh;
+  font-size: 1.05rem;
+  color: var(--color-muted-strong);
 }
 
+/* Auth pages (login, register, forgot/reset password) */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -109,76 +72,71 @@
   justify-content: center;
   padding: 1.5rem;
   color: var(--color-text);
-  color-scheme: dark;
-  background:
-    radial-gradient(120% 90% at 15% 5%, rgba(90, 100, 140, 0.22) 0%, transparent 50%),
-    radial-gradient(90% 70% at 95% 15%, rgba(50, 80, 140, 0.12) 0%, transparent 45%),
-    linear-gradient(165deg, #050506 0%, #0c0c0e 42%, #080809 100%);
+  background: var(--color-background);
 }
 
-.auth-page a, a {
-  color: rgba(255, 255, 255, 0.72);
+.auth-page a {
+  color: var(--color-primary);
+  font-weight: 600;
   text-decoration: none;
 }
 
 .auth-page a:hover {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--color-accent);
 }
 
 .auth-card {
-  width: min(520px, 95vw);
-  padding: 2rem 2.1rem;
-  border-radius: 22px;
-  border: 1px solid var(--glass-stroke);
-  background: var(--glass-surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  width: min(440px, 100%);
+  padding: 2.5rem 2.25rem;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-page);
+  box-shadow: 0 1px 2px rgba(16, 28, 46, 0.04), 0 16px 32px -12px var(--color-shadow);
 }
 
 .auth-brand-card .brand-top {
   text-align: center;
-  margin-bottom: 1.15rem;
+  margin-bottom: 1.75rem;
 }
 
 .auth-brand-card .brand-logo {
-  font-size: 1.4rem;
-  margin-bottom: 0.4rem;
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 12px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  font-size: 1.5rem;
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .auth-brand-card h1 {
-  margin: 0.35rem 0 0.25rem;
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  margin: 0 0 0.35rem;
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--color-heading);
 }
 
 .auth-brand-card .brand-subtitle {
   margin: 0;
   color: var(--color-muted);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 
 .auth-form {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: grid;
-  gap: 0.9rem;
+  gap: 1rem;
 }
 
 .auth-links {
-  margin-top: 1.1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -186,43 +144,51 @@
 }
 
 .auth-links a {
-  font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.86rem;
 }
 
 .auth-card h2 {
-  margin: 0 0 1rem;
-  font-size: 1.2rem;
+  margin: 0 0 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
   color: var(--color-heading);
 }
 
 .auth-card p {
   color: var(--color-muted-strong);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.92rem;
 }
 
 .auth-card form {
   display: grid;
-  gap: 0.78rem;
+  gap: 0.9rem;
 }
 
 .auth-card label {
-  margin-top: 0.3rem;
-  color: var(--color-muted);
-  font-size: 0.88rem;
+  margin-top: 0.2rem;
+  color: var(--color-muted-strong);
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .auth-card input,
 .auth-card select {
   border: 1px solid var(--color-input-border);
-  border-radius: 12px;
-  padding: 0.76rem 0.84rem;
-  font-size: 0.96rem;
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.95rem;
   width: 100%;
   background: var(--color-input-bg);
   color: var(--color-heading);
+}
+
+.auth-card input:focus,
+.auth-card select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .auth-card select {
@@ -230,45 +196,37 @@
 }
 
 .auth-card button {
-  margin-top: 0.7rem;
-  padding: 0.78rem;
-  border-radius: 14px;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .auth-card button:disabled {
-  opacity: 0.55;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.auth-page .ui-button-primary {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: linear-gradient(180deg, #1c1c1e 0%, #0a0a0a 100%);
-  color: #f5f5f7;
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.auth-page .ui-button-primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #2c2c2e 0%, #141416 100%);
-  border-color: rgba(255, 255, 255, 0.22);
-}
-
 .auth-error {
-  color: #f87171;
-  font-size: 0.86rem;
-  margin-top: 0.4rem;
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
 }
 
 .auth-success {
-  color: #4ade80;
-  font-size: 0.86rem;
-  margin-top: 0.4rem;
+  color: var(--color-success);
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
 }
 
 .auth-page--loading {
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--color-muted-strong);
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 2rem 1.5rem;
+  }
 }
