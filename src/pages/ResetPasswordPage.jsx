@@ -10,7 +10,8 @@ function useQuery() {
 }
 
 function ResetPasswordPage() {
-  const [token, setToken] = useState(() => useQuery().get('token') || '')
+  const tokenFromUrl = useQuery().get('token') || ''
+  const [token, setToken] = useState(tokenFromUrl)
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
@@ -59,7 +60,9 @@ function ResetPasswordPage() {
 
         <h2>{content?.heading ?? 'Reset Password'}</h2>
         <form onSubmit={onSubmit} className="auth-form">
-          <Input label={content?.fields?.token || 'Reset token'} value={token} onChange={(e) => setToken(e.target.value)} required />
+          {!tokenFromUrl && (
+            <Input label={content?.fields?.token || 'Reset token'} value={token} onChange={(e) => setToken(e.target.value)} required />
+          )}
           <Input label={content?.fields?.newPassword} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <Input label={content?.fields?.confirmPassword} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? content?.statusMessages?.updating : content?.submitButton}</Button>
