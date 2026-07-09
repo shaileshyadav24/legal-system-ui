@@ -10,7 +10,7 @@
 
 @keyframes slideUp {
   from {
-    transform: translateY(30px);
+    transform: translateY(16px);
     opacity: 0;
   }
   to {
@@ -22,7 +22,7 @@
 @keyframes fadeInMessage {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -47,6 +47,11 @@
   &::-webkit-scrollbar {
     width: 8px;
   }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.16);
+  }
 }
 
 .chats-list {
@@ -55,86 +60,50 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 12px;
-  }
-}
-
-.messages-container {
-  &::-webkit-scrollbar-thumb {
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
   }
 }
 
 /* Common Transitions */
 * {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 button {
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 input {
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
-/* Common Typography — iOS-friendly stack for chat UI */
-$font-family-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
-$font-family-mono: 'Courier New', monospace;
-
+/* Common Typography */
 body {
-  font-family: $font-family-primary;
+  font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 400;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
 }
 
 code {
-  font-family: $font-family-mono;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
 .chatbot-header h1,
 .sidebar-header h2,
-.modal-content h2,
-.modal-content p,
-.message-input,
-.send-button,
-.user-type-button {
-  font-family: $font-family-primary;
-  font-weight: 500;
-}
-
-.chatbot-header h1,
-.sidebar-header h2,
-.modal-content h2,
-.send-button,
-.user-type-button,
-.new-chat-button {
-  letter-spacing: 1px;
+.modal-content h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
 }
 
 .user-type-badge,
-.new-chat-button,
-.send-button,
-.user-type-button {
+.sidebar-section h3 {
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.send-button {
-  letter-spacing: 1px;
+  letter-spacing: 0.06em;
 }
 
 /* Common Button Styles */
 button {
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
-.send-button,
-.new-chat-button,
-.user-type-button {
   &:active {
     transform: scale(0.98);
   }
@@ -151,9 +120,9 @@ button {
 }
 
 .slide-up {
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.25s ease-out;
 }
 
 .fade-in-message {
-  animation: fadeInMessage 0.3s ease-in;
+  animation: fadeInMessage 0.25s ease-in;
 }

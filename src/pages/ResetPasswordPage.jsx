@@ -10,6 +10,8 @@ function useQuery() {
 }
 
 function ResetPasswordPage() {
+  const tokenFromUrl = useQuery().get('token') || ''
+  const [token, setToken] = useState(tokenFromUrl)
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
@@ -17,12 +19,14 @@ function ResetPasswordPage() {
   const [loading, setLoading] = useState(false)
   const { content, status: contentStatus } = usePageContent('reset-password')
 
-  const query = useQuery()
-  const token = query.get('token') || 'demo-token'
   const navigate = useNavigate()
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    if (!token.trim()) {
+      setError('Reset token is required')
+      return
+    }
     if (password !== confirm) {
       setError('Passwords do not match')
       return
@@ -31,7 +35,7 @@ function ResetPasswordPage() {
     setError('')
     setLoading(true)
     try {
-      await resetPassword(token, password)
+      await resetPassword(token.trim(), password)
       setSuccess('Password updated. Please login.')
       setTimeout(() => navigate('/login'), 1200)
     } catch (err) {
@@ -56,6 +60,9 @@ function ResetPasswordPage() {
 
         <h2>{content?.heading ?? 'Reset Password'}</h2>
         <form onSubmit={onSubmit} className="auth-form">
+          {!tokenFromUrl && (
+            <Input label={content?.fields?.token || 'Reset token'} value={token} onChange={(e) => setToken(e.target.value)} required />
+          )}
           <Input label={content?.fields?.newPassword} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <Input label={content?.fields?.confirmPassword} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           <Button type="submit" disabled={loading} variant="primary" size="md">{loading ? content?.statusMessages?.updating : content?.submitButton}</Button>

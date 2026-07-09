@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setUserProfile, loginSuccess } from '../store/slices/userSlice'
+import { useUserStore } from '../stores/useUserStore'
 import { registerUser } from '../services/authService'
+import { storeUserType } from '../services/chatService'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 import { usePageContent } from '../hooks/usePageContent'
@@ -17,7 +17,8 @@ function RegisterPage() {
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
+  const setUserProfile = useUserStore((state) => state.setUserProfile)
+  const loginSuccess = useUserStore((state) => state.loginSuccess)
   const navigate = useNavigate()
 
   const onSubmit = async (e) => {
@@ -31,9 +32,10 @@ function RegisterPage() {
 
     setLoading(true)
     try {
-      const user = await registerUser({ name, userType, email, password })
-      dispatch(setUserProfile({ name: user.name, email: user.email, userType: user.userType }))
-      dispatch(loginSuccess({ name: user.name, email: user.email, userType: user.userType }))
+      const user = await registerUser({ name, email, password })
+      storeUserType(userType)
+      setUserProfile({ name: user.full_name, email: user.email, userType })
+      loginSuccess({ name: user.full_name, email: user.email, userType })
       navigate('/chat')
     } catch (err) {
       setError(err.message)

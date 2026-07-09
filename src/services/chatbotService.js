@@ -25,18 +25,13 @@ export const createErrorMessage = (error, defaultErrorText) => ({
   sender: 'bot'
 })
 
-// Pairs consecutive user/bot messages into {q, answer} turns, capped to the last 5
-export const buildChatHistory = (messages, maxTurns = 5) => {
-  const turns = []
-  for (let i = 0; i < messages.length - 1; i++) {
-    const current = messages[i]
-    const next = messages[i + 1]
-    if (current.sender === 'user' && next.sender === 'bot') {
-      turns.push({ q: current.text, answer: next.text })
-    }
-  }
-  return turns.slice(-maxTurns)
-}
+// Converts a backend session history entry into the two chat bubbles it represents.
+export const messageFromHistoryEntry = (entry) => ([
+  { text: entry.query, sender: 'user' },
+  { text: entry.answer, urls: entry.urls || [], sender: 'bot' }
+])
 
-export const queryAI = async (inputValue, userType, history, collectionName) =>
-  sendQuery(inputValue, userType, history, collectionName)
+// The server now owns conversation history (keyed by session_id); it no
+// longer accepts client-supplied history.
+export const queryAI = async (inputValue, userType, { sessionId, collectionName } = {}) =>
+  sendQuery(inputValue, userType, { sessionId, collectionName })

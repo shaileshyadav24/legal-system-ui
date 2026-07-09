@@ -1,33 +1,105 @@
+@mixin dark-palette {
+  --color-background: #14181d;
+  --color-page: #1b2027;
+  --color-panel: #1b2027;
+  --color-card: #1b2027;
+
+  --color-text: #d7dadf;
+  --color-heading: #f1f3f6;
+  --color-muted: #8b929c;
+  --color-muted-strong: #b7bcc4;
+
+  --color-border: #2a2f37;
+  --color-border-lg: #3a4049;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+
+  --color-primary: #3d6489;
+  --color-primary-hover: #4d7aa3;
+  --color-secondary: #232932;
+  --color-secondary-hover: #2c333d;
+  --color-accent: #c2a250;
+  --color-accent-hover: #d4b565;
+
+  --color-success: #2f9463;
+  --color-danger: #c15441;
+  --color-danger-hover: #d4695a;
+
+  --color-input-bg: #1f242b;
+  --color-input-border: #333a44;
+  --color-input-disabled-bg: #22262d;
+
+  --color-focus-ring: rgba(77, 122, 163, 0.32);
+}
+
 :root {
-  --color-background: #f0f4ff;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: Georgia, 'Iowan Old Style', 'Times New Roman', 'Source Serif Pro', serif;
+
+  /* Light palette (default) */
+  --color-background: #f6f7f8;
   --color-page: #ffffff;
   --color-panel: #ffffff;
-  --color-card: #f8faff;
-  --color-sidebar: #050c24;
-  --color-sidebar-alt: #091635;
-  --color-sidebar-border: rgba(136, 158, 220, 0.38);
-  --color-sidebar-fg: #eff4ff;
-  --color-text: #1a324f;
-  --color-heading: #0f1e4e;
-  --color-muted: #7184ab;
-  --color-muted-strong: #3e5b8d;
-  --color-border: #d8e5ff;
-  --color-border-lg: #9fb5ea;
-  --color-shadow: rgba(30, 50, 120, 0.14);
-  --color-primary: #3b6bff;
-  --color-primary-hover: #325de3;
-  --color-secondary: #f0f5ff;
-  --color-accent: #7e8eff;
-  --color-success: #0f985a;
-  --color-danger: #d03845;
-  --color-input-bg: #eef2ff;
-  --color-input-border: #c7d8ff;
-  --color-tempo: #dbe5ff;
+  --color-card: #ffffff;
+
+  --color-text: #222831;
+  --color-heading: #101c2e;
+  --color-muted: #6b7280;
+  --color-muted-strong: #454e59;
+
+  --color-border: #e2e5ea;
+  --color-border-lg: #c7ccd5;
+  --color-shadow: rgba(16, 28, 46, 0.08);
+
+  --color-primary: #14293f;
+  --color-primary-hover: #1d3a58;
+  --color-secondary: #eef0f4;
+  --color-secondary-hover: #e2e6ec;
+  --color-accent: #a3822f;
+  --color-accent-hover: #8a6d27;
+
+  --color-success: #1e7a4c;
+  --color-danger: #a53a2e;
+  --color-danger-hover: #8c3025;
+
+  --color-input-bg: #ffffff;
+  --color-input-border: #d5d9e0;
+  --color-input-disabled-bg: #f0f1f4;
+
+  --color-focus-ring: rgba(20, 41, 63, 0.16);
+
+  /* Constant across themes — the sidebar is always a dark nav rail */
+  --color-sidebar: #101c2e;
+  --color-sidebar-alt: #17263c;
+  --color-sidebar-border: rgba(255, 255, 255, 0.09);
+  --color-sidebar-border-strong: rgba(255, 255, 255, 0.16);
+  --color-sidebar-surface: rgba(255, 255, 255, 0.1);
+  --color-sidebar-surface-border: rgba(255, 255, 255, 0.12);
+
+  /* Sidebar text tint scale, high to low emphasis */
+  --color-sidebar-fg: #e8ecf3;
+  --color-sidebar-fg-hover: rgba(255, 255, 255, 0.85);
+  --color-sidebar-fg-muted: rgba(255, 255, 255, 0.5);
+  --color-sidebar-fg-subtle: rgba(255, 255, 255, 0.4);
+
+  /* Sidebar destructive actions (delete chat, sign out) — kept separate from
+     --color-danger since the sidebar doesn't shift with the light/dark toggle */
+  --color-sidebar-danger: #e0776a;
+  --color-sidebar-danger-border: rgba(224, 119, 106, 0.4);
+  --color-sidebar-danger-hover-bg: rgba(224, 119, 106, 0.12);
+  --color-sidebar-danger-hover-border: rgba(224, 119, 106, 0.6);
+
   --color-white: #ffffff;
-  --color-black: #0b1129;
-  --color-focus-ring: rgba(59, 107, 255, 0.22);
-  --color-input-disabled-bg: #e8ecf8;
-  --color-secondary-hover: #e4ebff;
+  --color-black: #10131a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-palette;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include dark-palette;
 }
 
 * {
@@ -40,7 +112,7 @@ body {
   min-height: 100vh;
   background: var(--color-background);
   color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--font-sans);
 }
 
 #root {
@@ -49,12 +121,12 @@ body {
 }
 
 a {
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-accent);
 }
 
 button, input, select, textarea {

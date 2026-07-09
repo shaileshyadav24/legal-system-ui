@@ -1,21 +1,16 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { loadPageContent } from '../store/slices/contentSlice'
+import { useQuery } from '@tanstack/react-query'
+import { fetchPageContent } from '../services/contentService'
 
 export function usePageContent(page) {
-  const dispatch = useDispatch()
-  const state = useSelector((state) => state.content)
-  const pageContent = state.pages[page] || null
-
-  useEffect(() => {
-    if (!pageContent || state.currentPage !== page) {
-      dispatch(loadPageContent(page))
-    }
-  }, [dispatch, page, pageContent, state.currentPage])
+  const { data, status, error } = useQuery({
+    queryKey: ['content', page],
+    queryFn: () => fetchPageContent(page),
+    staleTime: Infinity
+  })
 
   return {
-    content: pageContent,
-    status: state.status,
-    error: state.error
+    content: data || null,
+    status: status === 'pending' ? 'loading' : status,
+    error: error?.message || null
   }
 }

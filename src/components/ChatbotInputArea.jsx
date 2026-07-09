@@ -35,7 +35,7 @@ function ChatbotInputArea({
           onClick={onSend}
           disabled={isLoading || !inputValue.trim()}
           variant="primary"
-          size="md"
+          size="lg"
         >
           {sendButtonText}
         </Button>
