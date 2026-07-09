@@ -36,11 +36,19 @@ export const apiRequest = async (path, { method = 'GET', body, auth = true } = {
     if (token) headers.Authorization = `Bearer ${token}`
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined
-  })
+  let response
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined
+    })
+  } catch (error) {
+    // fetch() rejects (rather than resolving with a non-ok response) on
+    // network-level failures — server down, CORS, offline — with an opaque
+    // browser message like "Failed to fetch". Surface something actionable.
+    throw new ApiError('Unable to reach the server. Check your connection and try again.', 0)
+  }
 
   // 204: success with nothing to return (logout, delete, reset-password) or,
   // for /query/*, "no relevant context found" — callers tell these apart.

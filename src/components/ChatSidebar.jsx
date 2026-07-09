@@ -72,13 +72,13 @@ function ChatSidebar({ chats, activeChatId, onSelectChat, onNewChat, userType, u
       </div>
       <div className="sidebar-footer">
         <div className="sidebar-profile">
-          <div className="profile-icon">👤</div>
+          <div className="profile-icon" title={`${profileName} (${profileType})`}>👤</div>
           <div>
             <div className="profile-name">{profileName}</div>
             <div className="profile-type">{profileType}</div>
           </div>
         </div>
-        <Button onClick={onSignOut} variant="secondary" size="sm" className="signout-button">{signOutText}</Button>
+        <Button onClick={onSignOut} variant="secondary" size="sm" className="signout-button" title={signOutText}>{signOutText}</Button>
       </div>
     </div>
   )

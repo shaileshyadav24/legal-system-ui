@@ -10,80 +10,6 @@
   overflow: hidden;
 }
 
-.chatbot-header {
-  padding: 1rem 1.25rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-page);
-  color: var(--color-heading);
-  gap: 1rem;
-}
-
-.chatbot-title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.chat-title-input {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  font-weight: 600;
-  border: none;
-  outline: none;
-  width: 100%;
-  color: var(--color-heading);
-  background: transparent;
-  padding: 0;
-  border-bottom: 1px dashed transparent;
-}
-
-.chat-title-input:focus {
-  border-bottom: 1px dashed var(--color-border-lg);
-}
-
-.chat-title-desc {
-  font-size: 0.78rem;
-  color: var(--color-muted);
-}
-
-.chatbot-actions {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.action-btn {
-  border: 1px solid var(--color-border);
-  background: var(--color-secondary);
-  border-radius: 8px;
-  width: 36px;
-  height: 36px;
-  appearance: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95rem;
-  color: var(--color-heading);
-}
-
-.action-btn:hover {
-  background: var(--color-secondary-hover);
-}
-
-.chatbot-header h1 {
-  display: none;
-}
-
-.chatbot-header p {
-  color: var(--color-muted);
-  margin: 0.25rem 0 0;
-}
-
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -206,6 +132,9 @@
   font-size: 0.8rem;
 }
 
+// Wraps the shared Input/Button components — sizing comes from those
+// components themselves (.ui-input, .ui-button-lg), kept in sync with
+// auth-page forms rather than styled separately here.
 .input-container {
   display: flex;
   align-items: center;
@@ -215,84 +144,10 @@
   border-top: 1px solid var(--color-border);
 }
 
-.message-input {
-  flex: 1;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--color-input-border);
-  border-radius: 10px;
-  font-size: 0.96rem;
-  outline: none;
-  background: var(--color-input-bg);
-  color: var(--color-heading);
-}
-
-.message-input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
-}
-
-.message-input:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
 .input-left {
-  flex: 1;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.mic-btn {
-  border: 1px solid var(--color-border);
-  background: var(--color-secondary);
-  border-radius: 10px;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  color: var(--color-heading);
-}
-
-.toggles {
   display: flex;
-  gap: 0.5rem;
+  flex: 1;
   align-items: center;
-}
-
-.toggle-tab {
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: var(--color-secondary);
-  color: var(--color-muted-strong);
-  font-size: 0.78rem;
-  padding: 0.35rem 0.7rem;
-  cursor: pointer;
-}
-
-.toggle-tab.active {
-  background: var(--color-primary);
-  color: var(--color-white);
-  border-color: var(--color-primary);
-}
-
-.send-button {
-  padding: 0.8rem 1.4rem;
-  border: 1px solid var(--color-primary);
-  border-radius: 10px;
-  font-size: 0.94rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: var(--color-white);
-  background: var(--color-primary);
-}
-
-.send-button:hover:not(:disabled) {
-  background: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
-}
-
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
@@ -303,16 +158,10 @@
     border-right: none;
   }
 
-  .chatbot-header {
-    padding: 0.85rem 1rem;
-  }
-
-  .chat-title-input {
-    font-size: 1.1rem;
-  }
-
   .messages-container {
-    padding: 1rem;
+    // Extra top clearance so messages don't render underneath the fixed
+    // mobile sidebar-open button (top-left) and theme toggle (top-right).
+    padding: 4rem 1rem 1rem;
   }
 
   .message-content {
@@ -322,10 +171,6 @@
 
   .input-container {
     padding: 0.85rem;
-  }
-
-  .send-button {
-    padding: 0.75rem 1.1rem;
   }
 }
 

@@ -41,17 +41,53 @@
   color: var(--color-muted-strong);
 }
 
-@media (max-width: 900px) {
-  .app-layout {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
+// On mobile the sidebar becomes an off-canvas drawer (see ChatSidebar.scss)
+// instead of pushing/stacking content, so the chat panel stays full-screen.
+.mobile-sidebar-trigger {
+  display: none;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .chat-panel {
+    padding: 0;
   }
 
-  .chat-panel {
-    height: auto;
-    min-height: 60vh;
-    padding: 1rem;
+  .no-chat-selected {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .mobile-sidebar-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1600;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-page);
+    color: var(--color-heading);
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 1px 2px var(--color-shadow);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    background: rgba(8, 12, 20, 0.55);
+    animation: fadeIn 0.2s ease;
   }
 }
 
@@ -59,7 +95,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   font-size: 1.05rem;
   color: var(--color-muted-strong);
 }
@@ -173,39 +208,30 @@
   font-weight: 500;
 }
 
-.auth-card input,
+// The `select` for user type isn't wrapped by the shared Input component
+// (it needs <option> children), so it still needs its own field styling to
+// match .ui-input. Plain inputs/buttons use the shared component classes
+// (.ui-input, .ui-button-lg) directly — no page-specific size override.
 .auth-card select {
-  border: 1px solid var(--color-input-border);
+  height: 42px;
   border-radius: 8px;
-  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-input-border);
+  padding: 0.5rem 0.7rem;
   font-size: 0.95rem;
   width: 100%;
   background: var(--color-input-bg);
   color: var(--color-heading);
+  cursor: pointer;
 }
 
-.auth-card input:focus,
 .auth-card select:focus {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
-.auth-card select {
-  cursor: pointer;
-}
-
 .auth-card button {
   margin-top: 0.5rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.auth-card button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .auth-error {

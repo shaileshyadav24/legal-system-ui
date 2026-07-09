@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useUserStore } from './stores/useUserStore'
 import { useChatsStore } from './stores/useChatsStore'
 import './App.scss'
-import { loadStoredUserType } from './services/chatService'
 import { getStoredUser, fetchCurrentUser, logout as logoutRequest } from './services/authService'
 import { AUTH_STORAGE_KEY } from './services/api'
 import ChatPage from './pages/ChatPage'
@@ -18,23 +17,19 @@ function App() {
   const navigate = useNavigate()
   const isAuthenticated = useUserStore((state) => state.isAuthenticated)
   const userType = useUserStore((state) => state.userType)
-  const loginSuccess = useUserStore((state) => state.loginSuccess)
   const logout = useUserStore((state) => state.logout)
   const resetUser = useUserStore((state) => state.resetUser)
   const addDraftChat = useChatsStore((state) => state.addDraftChat)
 
   useEffect(() => {
+    // useUserStore already hydrates isAuthenticated synchronously from
+    // localStorage (see stores/useUserStore.js), so a refresh never flashes
+    // a logged-out state. This just confirms the cached token is still
+    // valid — it may have been revoked from another tab — and drops the
+    // session if not.
     const storedUser = getStoredUser()
     if (!storedUser?.token) return
 
-    loginSuccess({
-      name: storedUser.full_name,
-      email: storedUser.email,
-      userType: loadStoredUserType() || 'layman'
-    })
-
-    // The cached token may have been revoked from another tab — confirm it's
-    // still valid and drop the session if not.
     fetchCurrentUser().catch((error) => {
       if (error?.status === 401) {
         localStorage.removeItem(AUTH_STORAGE_KEY)

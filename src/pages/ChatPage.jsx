@@ -15,8 +15,14 @@ const formatTimestamp = (isoString) => {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
+const MOBILE_QUERY = '(max-width: 768px)'
+
 function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  // On desktop the sidebar defaults open (an in-flow rail); on mobile it
+  // defaults closed (an off-canvas drawer) so it doesn't cover the chat on load.
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches
+  ))
   const queryClient = useQueryClient()
 
   const userType = useUserStore((state) => state.userType)
@@ -73,6 +79,12 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
 
   const handleSelectChat = useCallback((chatId) => {
     setActiveChatId(chatId)
+    // On mobile the sidebar is an overlay drawer — close it after picking a
+    // chat so the conversation is actually visible. No-op on desktop, where
+    // "collapsed" just means the narrow icon rail, not hidden.
+    if (window.matchMedia(MOBILE_QUERY).matches) {
+      setIsSidebarCollapsed(true)
+    }
   }, [setActiveChatId])
 
   const handleTogglePinChat = useCallback((chatId) => {
@@ -106,6 +118,17 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
   return (
     <Suspense fallback={<div className="loading">{loadingText}</div>}>
       <div className="app-layout">
+        {isSidebarCollapsed && (
+          <button
+            type="button"
+            className="mobile-sidebar-trigger"
+            onClick={handleToggleSidebar}
+            aria-label="Open menu"
+            title="Open menu"
+          >
+            ☰
+          </button>
+        )}
         <ChatSidebar
           chats={chats}
           activeChatId={activeChatId}
@@ -121,6 +144,9 @@ function ChatPage({ onNewChat, onUserTypeChange, onSignOut }) {
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={handleToggleSidebar}
         />
+        {!isSidebarCollapsed && (
+          <div className="sidebar-backdrop" onClick={handleToggleSidebar} />
+        )}
         <div className="chat-panel">
           {activeChat ? (
             <Chatbot

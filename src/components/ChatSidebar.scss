@@ -4,6 +4,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   position: relative;
   color: var(--color-sidebar-fg);
   border-right: 1px solid var(--color-sidebar-border);
@@ -56,7 +57,7 @@
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid var(--color-sidebar-border-strong);
   background: var(--color-sidebar-alt);
   color: var(--color-accent);
 }
@@ -97,7 +98,7 @@
   margin: 0.85rem 0.25rem 0.4rem;
   font-size: 0.7rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-sidebar-fg-subtle);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -115,12 +116,12 @@
 
 .empty-hint {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-sidebar-fg-muted);
 }
 
 .chat-item {
   padding: 0.85rem 0.8rem;
-  margin-bottom: 0;
+  margin: 5px 0;
   border: 1px solid transparent;
   cursor: pointer;
   border-radius: 8px;
@@ -140,30 +141,50 @@
 }
 
 .chat-item-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   font-size: 0.88rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--color-sidebar-fg);
+}
+
+.chat-item-title > span {
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.chat-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.pin-icon,
+.delete-icon {
+  padding: 0.2rem !important;
+  min-width: 0;
+  line-height: 1;
+}
+
 .pin-icon {
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
-  padding: 0;
-  margin-left: 0.4rem;
+  color: var(--color-sidebar-fg-subtle);
 }
 
 .pin-icon:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-sidebar-fg-hover);
 }
 
 .chat-item-preview-text {
   font-size: 0.76rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-sidebar-fg-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -171,21 +192,20 @@
 
 .chat-item-time {
   font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.38);
+  color: var(--color-sidebar-fg-subtle);
   text-align: right;
 }
 
 .delete-icon {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-sidebar-fg-subtle);
   font-size: 0.8rem;
   cursor: pointer;
-  float: right;
 }
 
 .delete-icon:hover {
-  color: #e0776a;
+  color: var(--color-sidebar-danger);
 }
 
 .sidebar-footer {
@@ -214,44 +234,46 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--color-sidebar-surface);
+  border: 1px solid var(--color-sidebar-surface-border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-sidebar-fg);
+  flex-shrink: 0;
 }
 
 .profile-name {
   font-size: 0.86rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--color-sidebar-fg);
 }
 
 .profile-type {
   font-size: 0.76rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-sidebar-fg-muted);
   text-transform: capitalize;
 }
 
 .signout-button {
   width: 100%;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--color-sidebar-danger-border);
   background: transparent;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--color-sidebar-danger);
   font-weight: 600;
-  transition: opacity 0.2s ease, visibility 0.2s ease, background-color 0.15s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease, background-color 0.15s ease, border-color 0.15s ease;
   opacity: 1;
   visibility: visible;
 }
 
 .signout-button:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-sidebar-danger-hover-bg);
+  border-color: var(--color-sidebar-danger-hover-border);
 }
 
-/* Collapsed state */
+/* ---- Desktop collapsed state: a narrow icon-only rail ---- */
 .chat-sidebar.collapsed {
   width: 72px;
   min-width: 72px;
@@ -272,7 +294,7 @@
   margin: 0.5rem auto;
   padding: 0 !important;
   font-size: 0;
-  border-radius: 8px;
+  border-radius: 50%;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -299,9 +321,12 @@
   display: none;
 }
 
+.chat-sidebar.collapsed .empty-chats {
+  display: none;
+}
+
 .chat-sidebar.collapsed .chat-item {
   padding: 0.5rem;
-  margin-bottom: 0.4rem;
   min-width: 48px;
   height: 48px;
   display: flex;
@@ -336,23 +361,39 @@
   display: none;
 }
 
-.chat-sidebar.collapsed .sidebar-footer .sidebar-profile {
-  display: none;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+.chat-sidebar.collapsed .sidebar-profile {
+  justify-content: center;
 }
 
-.chat-sidebar.collapsed .sidebar-footer .signout-button {
+.chat-sidebar.collapsed .sidebar-profile > div:last-child {
   display: none;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+}
+
+.chat-sidebar.collapsed .signout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  padding: 0 !important;
+  font-size: 0;
+  border-radius: 50%;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  position: relative;
+}
+
+.chat-sidebar.collapsed .signout-button::before {
+  content: '🚪';
+  font-size: 1.05rem;
 }
 
 .chat-sidebar.collapsed .sidebar-footer {
   padding: 0.5rem;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .chat-sidebar.collapsed .sidebar-header {
@@ -369,16 +410,25 @@
   width: 100%;
 }
 
+/* ---- Mobile: an off-canvas drawer instead of an in-flow rail ----
+   "Collapsed" here means "hidden off-screen"; the expanded state reuses the
+   same full-content layout as desktop's expanded rail, just as an overlay. */
 @media (max-width: 768px) {
   .chat-sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 40vh;
-    border-right: none;
-    border-bottom: 1px solid var(--color-sidebar-border);
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 1500;
+    width: min(300px, 85vw);
+    min-width: 0;
+    transform: translateX(0);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s ease;
   }
 
-  .sidebar-header h2 {
-    font-size: 1rem;
+  .chat-sidebar.collapsed {
+    width: min(300px, 85vw);
+    min-width: 0;
+    transform: translateX(-100%);
+    box-shadow: none;
   }
 }

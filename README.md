@@ -1,6 +1,6 @@
-# Legal System Chatbot - Frontend Application
+# VakeelAI - Frontend Application
 
-A modern React-based frontend application for a legal system chatbot with AI-powered legal Q&A, backed by a JWT-authenticated, session-based chat API.
+A modern React-based frontend application for VakeelAI, an AI-powered legal Q&A chatbot, backed by a JWT-authenticated, session-based chat API.
 
 ## Features
 
@@ -125,8 +125,8 @@ The application uses a JSON-based content management system. All UI text is stor
 {
   "brand": {
     "logo": "⚖️",
-    "title": "Review contracts",
-    "subtitle": "with AI Lawyer"
+    "title": "VakeelAI",
+    "subtitle": "The AI assistant for your legal needs"
   },
   "heading": "Login",
   "fields": {

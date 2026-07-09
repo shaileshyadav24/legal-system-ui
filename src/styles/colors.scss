@@ -71,7 +71,23 @@
   --color-sidebar: #101c2e;
   --color-sidebar-alt: #17263c;
   --color-sidebar-border: rgba(255, 255, 255, 0.09);
+  --color-sidebar-border-strong: rgba(255, 255, 255, 0.16);
+  --color-sidebar-surface: rgba(255, 255, 255, 0.1);
+  --color-sidebar-surface-border: rgba(255, 255, 255, 0.12);
+
+  /* Sidebar text tint scale, high to low emphasis */
   --color-sidebar-fg: #e8ecf3;
+  --color-sidebar-fg-hover: rgba(255, 255, 255, 0.85);
+  --color-sidebar-fg-muted: rgba(255, 255, 255, 0.5);
+  --color-sidebar-fg-subtle: rgba(255, 255, 255, 0.4);
+
+  /* Sidebar destructive actions (delete chat, sign out) — kept separate from
+     --color-danger since the sidebar doesn't shift with the light/dark toggle */
+  --color-sidebar-danger: #e0776a;
+  --color-sidebar-danger-border: rgba(224, 119, 106, 0.4);
+  --color-sidebar-danger-hover-bg: rgba(224, 119, 106, 0.12);
+  --color-sidebar-danger-hover-border: rgba(224, 119, 106, 0.6);
+
   --color-white: #ffffff;
   --color-black: #10131a;
 }
