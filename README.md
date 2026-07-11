@@ -47,6 +47,11 @@ cd legal-system-ui
 npm install
 ```
 
+3. Configure the API URL (optional in dev — defaults to `http://localhost:8000`):
+```bash
+cp .env.example .env.local
+```
+
 ## Running the Application
 
 1. Start the development server:
@@ -59,14 +64,23 @@ npm run dev
 ## Building for Production
 
 ```bash
-npm run build
+VITE_API_URL=https://api.example.com npm run build
 ```
 
-The built files will be in the `dist` directory.
+The built files will be in the `dist` directory. `VITE_API_URL` is baked into the build at build time (Vite env vars are static, not runtime-configurable) — build separately per environment, or bake it in at container build time (see `Dockerfile`).
+
+### Docker
+
+```bash
+docker build --build-arg VITE_API_URL=https://api.example.com -t legal-system-ui .
+docker run -p 8080:80 legal-system-ui
+```
+
+This builds a static bundle with Node and serves it via nginx (`nginx.conf`), with SPA fallback routing so client-side routes (e.g. `/chat`) resolve to `index.html`.
 
 ## API Configuration
 
-The application communicates with a backend API at `http://localhost:8000`. All chat and history endpoints require a `Authorization: Bearer <access_token>` header, obtained from login/register.
+The application communicates with a backend API, configured via the `VITE_API_URL` environment variable (see `.env.example`) and falling back to `http://localhost:8000` if unset. All chat and history endpoints require a `Authorization: Bearer <access_token>` header, obtained from login/register.
 
 ### Authentication Endpoints
 - `POST /auth/register` - Create an account, returns a token
